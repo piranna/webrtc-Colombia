@@ -1,0 +1,1 @@
+module.exports = require("npm:babel-plugin-transform-react-jsx@6.24.1/lib/index.js");

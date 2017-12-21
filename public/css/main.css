@@ -1,0 +1,68 @@
+body{
+
+	font-family: 'Verdana';
+
+}
+
+
+header{
+
+	position: relative;
+	width: 100vw;
+	/*Flexbox Definitions*/
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+
+}
+
+
+header h1{
+
+
+	
+
+}
+
+
+section.displays{
+
+
+	position: relative;
+	width: 100vw;
+
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+
+}
+
+
+.display{
+
+	position: relative;
+	width: 49vw;
+	height: 27vw;
+	border: 1px solid #221100;
+
+}
+
+
+footer{
+
+	position: fixed;
+	width: 100vw;
+	bottom: 0px;
+	height: 1.2rem;
+	border: 1px solid #221100;
+
+	overflow: hidden;
+
+}
+
+footer div{
+
+	position: relative;
+	width: 3000vw;
+	
+}

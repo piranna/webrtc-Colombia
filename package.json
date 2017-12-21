@@ -1,14 +1,64 @@
 {
   "name": "webrtc",
   "version": "1.0.0",
-  "description": "",
+  "description": "WebRTC",
   "main": "index.js",
+  "dependencies": {
+    "socket.io": "^2.0.4",
+    "socket.io-client": "^2.0.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "browser-sync": "^2.18.13",
+    "chai": "^4.1.2",
+    "jspm": "^0.16.53",
+    "mocha": "^4.0.1"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "httpserver": "browser-sync start --https yes --files 'public/**/*.html,public/**/*.css,public/**/*.js' --server 'public' --port '8000' --ui-port '8001'",
+    "httpsserver": "browser-sync start --https yes --files 'public/**/*.html,public/**/*.css,public/**/*.js' --server 'public' --port '7000' --ui-port '7001'",
+    "build": "babel src/models/*.js src/*.js -d dist/",
+    "bt": "babel src/models/*.js src/*.js -d dist/ && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mmuriel/webrtc.git"
   },
   "keywords": [
-    "webrtc"
+    "webrtc",
+    "kurento",
+    "kms"
   ],
   "author": "@maomuriel",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mmuriel/webrtc/issues"
+  },
+  "homepage": "https://github.com/mmuriel/webrtc#readme",
+  "jspm": {
+    "directories": {
+      "baseURL": "public"
+    },
+    "dependencies": {
+      "babel-preset-es2015": "npm:babel-preset-es2015@^6.24.1",
+      "babel-preset-react": "npm:babel-preset-react@^6.24.1",
+      "bufferutil": "npm:bufferutil@^3.0.3",
+      "jquery": "npm:jquery@^3.2.1",
+      "socket.io": "npm:socket.io@^2.0.4",
+      "socket.io-client": "npm:socket.io-client@^2.0.4",
+      "utf-8-validate": "npm:utf-8-validate@^4.0.0"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    },
+    "buildConfig": {
+      "transpileES6": true,
+      "minify": true
+    }
+  }
 }

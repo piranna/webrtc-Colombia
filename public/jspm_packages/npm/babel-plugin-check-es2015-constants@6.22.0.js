@@ -1,0 +1,1 @@
+module.exports = require("npm:babel-plugin-check-es2015-constants@6.22.0/lib/index.js");

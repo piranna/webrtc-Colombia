@@ -1,0 +1,1 @@
+module.exports = require("npm:babel-plugin-transform-es2015-duplicate-keys@6.24.1/lib/index.js");

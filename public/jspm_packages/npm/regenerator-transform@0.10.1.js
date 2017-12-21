@@ -1,0 +1,1 @@
+module.exports = require("npm:regenerator-transform@0.10.1/lib/index.js");

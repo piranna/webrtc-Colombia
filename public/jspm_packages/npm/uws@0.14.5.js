@@ -1,0 +1,1 @@
+module.exports = require("npm:uws@0.14.5/uws.js");

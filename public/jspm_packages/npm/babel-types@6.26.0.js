@@ -1,0 +1,1 @@
+module.exports = require("npm:babel-types@6.26.0/lib/index.js");

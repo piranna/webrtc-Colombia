@@ -1,0 +1,1 @@
+module.exports = require("npm:babel-plugin-transform-regenerator@6.26.0/lib/index.js");

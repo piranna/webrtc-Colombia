@@ -1,0 +1,1 @@
+module.exports = require("npm:babel-messages@6.23.0/lib/index.js");

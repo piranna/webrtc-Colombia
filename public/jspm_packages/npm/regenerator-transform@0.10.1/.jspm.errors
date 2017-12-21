@@ -1,0 +1,104 @@
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:11:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:11:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:11:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:11:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:12:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:12:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:12:18: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/hoist.js:12:23: Semi-colon expected
+
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:11:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:11:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:11:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:11:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:12:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:12:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:12:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:12:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:13:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:13:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/leap.js:13:26: Semi-colon expected
+
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:11:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:11:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:11:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:11:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:13:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:13:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:13:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/meta.js:13:20: Semi-colon expected
+
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:1:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:1:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:1:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:1:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:2:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:2:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:2:18: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:2:23: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:32:1: Unexpected reserved word export
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:32:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:32:8: Unexpected reserved word default
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/replaceShorthandObjectMethod.js:32:16: Semi-colon expected
+
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:11:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:11:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:11:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:11:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:13:1: Unexpected reserved word export
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:13:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:21:1: Unexpected reserved word export
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:21:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:25:1: Unexpected reserved word export
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/util.js:25:8: Semi-colon expected
+
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:11:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:11:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:11:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:11:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:12:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:12:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:12:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:12:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:13:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:13:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:13:18: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:13:23: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:14:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:14:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:14:18: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:14:23: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:15:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:15:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:15:18: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/emit.js:15:23: Semi-colon expected
+
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:13:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:13:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:13:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:13:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:14:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:14:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:14:15: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:14:20: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:15:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:15:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:15:23: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:16:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:16:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:16:25: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:17:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:17:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:17:37: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:17:42: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:18:1: Unexpected reserved word import
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:18:13: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:18:18: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/visit.js:18:23: Semi-colon expected
+
+MultipleErrors: /Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/index.js:11:1: Unexpected reserved word export
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/index.js:11:8: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/index.js:11:8: Unexpected reserved word default
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/index.js:11:16: Semi-colon expected
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/index.js:11:25: Unexpected token (
+/Users/macuser/.jspm/packages/npm/regenerator-transform@0.10.1/src/index.js:11:26: Unexpected token context

@@ -1,1 +1,0 @@
-module.exports = require("npm:are-we-there-yet@1.1.4/index.js");

@@ -1,1 +1,0 @@
-module.exports = require("npm:wide-align@1.1.2/align.js");

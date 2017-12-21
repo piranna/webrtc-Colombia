@@ -1,1 +1,0 @@
-module.exports = require("npm:regenerate@1.3.3/regenerate.js");

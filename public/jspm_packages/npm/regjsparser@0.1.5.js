@@ -1,1 +1,0 @@
-module.exports = require("npm:regjsparser@0.1.5/parser");

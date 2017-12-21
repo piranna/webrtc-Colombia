@@ -1,1 +1,0 @@
-module.exports = require("npm:babel-plugin-transform-strict-mode@6.24.1/lib/index.js");

@@ -1,1 +1,0 @@
-module.exports = require("npm:node-abi@2.1.2/index.js");

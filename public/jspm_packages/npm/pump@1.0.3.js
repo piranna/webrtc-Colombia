@@ -1,1 +1,0 @@
-module.exports = require("npm:pump@1.0.3/index");

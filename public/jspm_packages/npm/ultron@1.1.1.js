@@ -1,1 +1,0 @@
-module.exports = require("npm:ultron@1.1.1/index.js");

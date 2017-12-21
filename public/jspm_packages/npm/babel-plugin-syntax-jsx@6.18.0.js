@@ -1,1 +1,0 @@
-module.exports = require("npm:babel-plugin-syntax-jsx@6.18.0/lib/index.js");

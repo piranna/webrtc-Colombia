@@ -1,1 +1,0 @@
-module.exports = require("npm:babel-helper-get-function-arity@6.24.1/lib/index.js");

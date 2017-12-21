@@ -1,1 +1,0 @@
-module.exports = require("npm:isarray@2.0.1/index.js");

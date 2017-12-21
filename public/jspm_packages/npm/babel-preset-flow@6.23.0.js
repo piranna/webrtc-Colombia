@@ -1,1 +1,0 @@
-module.exports = require("npm:babel-preset-flow@6.23.0/lib/index.js");

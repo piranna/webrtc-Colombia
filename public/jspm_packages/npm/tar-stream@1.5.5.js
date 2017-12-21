@@ -1,1 +1,0 @@
-module.exports = require("npm:tar-stream@1.5.5/index.js");

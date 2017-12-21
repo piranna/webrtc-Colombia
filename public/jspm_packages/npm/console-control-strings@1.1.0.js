@@ -1,1 +1,0 @@
-module.exports = require("npm:console-control-strings@1.1.0/index.js");

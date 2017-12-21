@@ -1,1 +1,0 @@
-module.exports = require("npm:async-limiter@1.0.0/index");

@@ -1,1 +1,0 @@
-module.exports = require("npm:expand-template@1.1.0/index.js");

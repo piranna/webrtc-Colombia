@@ -1,1 +1,0 @@
-module.exports = require("npm:babel-plugin-transform-es2015-modules-umd@6.24.1/lib/index.js");

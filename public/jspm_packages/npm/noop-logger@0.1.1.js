@@ -1,1 +1,0 @@
-module.exports = require("npm:noop-logger@0.1.1/lib/index.js");

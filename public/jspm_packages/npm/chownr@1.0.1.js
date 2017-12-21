@@ -1,1 +1,0 @@
-module.exports = require("npm:chownr@1.0.1/chownr.js");

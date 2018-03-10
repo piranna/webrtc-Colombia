@@ -12,6 +12,7 @@ System.config({
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
   },
+
   map: {
     "babel": "npm:babel-core@5.8.38",
     "babel-preset-es2015": "npm:babel-preset-es2015@6.24.1",
@@ -22,7 +23,9 @@ System.config({
     "jquery": "npm:jquery@3.2.1",
     "socket.io": "npm:socket.io@2.0.4",
     "socket.io-client": "npm:socket.io-client@2.0.4",
+    "uid-safe": "npm:uid-safe@2.1.5",
     "utf-8-validate": "npm:utf-8-validate@4.0.0",
+    "webrtc-adapter": "npm:webrtc-adapter@6.1.0",
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.4.1"
     },
@@ -840,6 +843,10 @@ System.config({
     "npm:punycode@1.3.2": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
+    "npm:random-bytes@1.0.0": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "crypto": "github:jspm/nodelibs-crypto@0.1.0"
+    },
     "npm:randombytes@2.0.5": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0",
@@ -910,6 +917,9 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "hash-base": "npm:hash-base@2.0.2",
       "inherits": "npm:inherits@2.0.3"
+    },
+    "npm:rtcpeerconnection-shim@1.2.5": {
+      "sdp": "npm:sdp@2.5.0"
     },
     "npm:safe-buffer@5.1.1": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1"
@@ -1040,6 +1050,10 @@ System.config({
       "tls": "github:jspm/nodelibs-tls@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
+    "npm:uid-safe@2.1.5": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "random-bytes": "npm:random-bytes@1.0.0"
+    },
     "npm:url@0.10.3": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "punycode": "npm:punycode@1.3.2",
@@ -1066,6 +1080,10 @@ System.config({
     },
     "npm:vm-browserify@0.0.4": {
       "indexof": "npm:indexof@0.0.1"
+    },
+    "npm:webrtc-adapter@6.1.0": {
+      "rtcpeerconnection-shim": "npm:rtcpeerconnection-shim@1.2.5",
+      "sdp": "npm:sdp@2.5.0"
     },
     "npm:wide-align@1.1.2": {
       "string-width": "npm:string-width@1.0.2"

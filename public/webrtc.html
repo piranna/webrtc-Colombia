@@ -20,7 +20,30 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <header>
+            EV WebRTC video-conf service
+        </header>
+        <section class="users">
+            MM1
+        </section>
+        <section class="displays">
+            <div class="display" id="own">
+                <video id="vOwn" autoplay></video>
+            </div>
+            <div class="display" id="foreign">
+                <video id="vForeign" autoplay></video>
+            </div>
+
+        </section>
+        <div class="form">
+            <input type="text" name="jointo" placeholder="Ingrese el ID del cliente a conectar..." id="jointo">
+            <button id="btn-send">
+                Enviar
+            </button>
+        </div>
+        <footer>
+            <div class="console"></div>
+        </footer>
         <script src="jspm_packages/system.js"></script>
         <script src="config.js"></script>
         <script>

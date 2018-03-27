@@ -7,13 +7,13 @@ var path = require('path');
 
 class WebSecureServer{
 
-	constructor(pathToPublic,httpPort) {
+	constructor(pathToPublic,httpPort,options) {
 
 
 		this.pathToPublic = pathToPublic;
 		this.options = {
-  			key: fs.readFileSync(pathToPublic+'../CERTS/test.key'),
-  			cert: fs.readFileSync(pathToPublic+'../CERTS/test.crt')
+  			key: fs.readFileSync(options.key),
+  			cert: fs.readFileSync(options.cert)
 		};
 		this.wserver = https.createServer(this.options,(req,res)=>{
 

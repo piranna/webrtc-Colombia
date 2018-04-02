@@ -1,6 +1,5 @@
 'strict mode'
 /* Requiring/Importing dependencies */
-let kurento = require('kurento-client');
 let minimist = require('minimist');
 
 /* Own modules */
@@ -80,102 +79,23 @@ wsServer.subscribeToEvents('connection',webRtcSignalingSrv.notifyNewConnection);
 
 */
 
-
-
-  kc = kurento.KurentoClient(argv.ws_uri);
-
-  kc.then(function(kclient){
-  // Connection success
-    //return 
-    kurentoClt = kclient;
-    //console.log(kurentoClt);
-    kurentoClt.create("MediaPipeline",(error,pl)=>{
-
-        console.log(pl);
-        mediaPipeLine = pl;
-        /*
-        mediaPipeLine.create("WebRtcEndPoint",function(error,me){
-          if (error){
-            console.log(error);
-          }
-          console.log(me);
-        });
-        */
-    })
-  },
-  function(error){
-  // Connection error
-    console.log(error);
-    return error;
-  });
-    //console.log("Desde 105...");
-    //console.log(ret);
-
-
-
-/*
-let promise1 = {};
-promise1 = getKurentoClient();
-
-promise1.then((kc)=>{
-
-  console.log("WWWWWWWWWWW...");
-  kurentoClient = kc;
-  kurentoClient.create('MediaPipeLine',(error,pl)=>{
-    if (error){
-      console.log("Error generando el pipeline");
-    }
-    console.log(pl);
-  });
-  main();
-},(error)=>{
-  console.log("ZZZZZZZZZZZ...");
-  console.log(error)
-});
-
-
-function main(){
-  console.log("Desde main()");
-  console.log(kurentoClient);
-}
-*/
-
-let intervalController = setInterval(setIntervalFunction,1000);
-
-
-
-function setIntervalFunction(){
-
-  if (mediaPipeLine){
-    console.log("MediaPipeline is redy");
-    //mediaPipeLine.      
-
-    console.log(kurentoClt);
-    console.log(mediaPipeLine);
-    mediaPipeLine.create("WebRtcEndpoint",function(error,ep){
-
-      console.log(ep);
-
-    });
-    /*
-    //This line of code doesn't work 
-    kurentoClt.create('MediaPipeLine',(error,pl2)=>{
-
-      console.log("Se genera un segundo pipeline...")
-      console.log(pl2);
-      
-
-    });
-    */
-    clearInterval(intervalController);
+let EvKurentoClt = require('./src/modules/EvKurento');
+let ctrlSetInterval = setInterval(()=>{
+  //console.log(EvKurentoClt.getKurentoClt())
+  if (EvKurentoClt.getKurentoClt() == null){
+    console.log("Kurento Client is not ready yet");
   }
   else{
-    console.log("MediaPipeLine is not ready...");
-    console.log(kurentoClt);
+
+    EvKurentoClt.getKurentoClt().create("MediaPipeline",(error,pl)=>{
+
+      console.log(pl);
+
+    });
+    clearInterval(ctrlSetInterval);
   }
-}
 
-
+},500);
 
 
 

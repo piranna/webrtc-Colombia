@@ -7,6 +7,10 @@ const config = {
 	},
 	httpsPort: 443,
 	httpPort: 8000,
+	kurento:{
+		as_uri: "https://kms2.sientifica.com:8443/",
+		ws_uri: "wss://kms2.sientifica.com:8433/kurento"
+	}
 
 }
 

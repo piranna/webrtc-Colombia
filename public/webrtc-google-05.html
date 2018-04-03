@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Realtime communication with WebRTC</title>
+
+  <link rel="stylesheet" href="css/g5/main.css" />
+
+</head>
+
+<body>
+
+  <h1>Realtime communication with WebRTC</h1>
+  <div id="videos">
+    <video id="localVideo" autoplay muted></video>
+    <video id="remoteVideo" autoplay></video>
+  </div>
+  <div class="user-list">
+    <h3>Usuarios Conectados</h3>
+    <ul>
+    </ul>
+  </div>
+  <div>
+    <button class="btn-start-local-video">Start Local Video</button>
+    <button class="btn-start-chat">Start Chat</button>
+  </div>
+
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <!-- <script src="js/g4/main.js"></script> -->
+  <script src="js/g5/lib/adapter.js"></script>
+  <script src="jspm_packages/system.js"></script>
+  <script src="config.js"></script>
+  <script>
+  System.import('js/g5/main-mm.js');
+  </script>
+
+</body>
+
+</html>

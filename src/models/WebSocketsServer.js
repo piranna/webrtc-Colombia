@@ -10,7 +10,7 @@ class WebSocketsServer{
 		this.socketServer = new socketio(httpServer);
 		this.pubsub = new PubSub();
 		this.maxUserPerRoom = 2;
-		console.log("Inicilializando el servidor de sockets...")
+		console.log("Starting websockets server...")
 	}
 
 
@@ -21,10 +21,7 @@ class WebSocketsServer{
 	}
 
 	emmitMessageToSingleSocket (eventype,msgObj,room){
-
-		console.log("WebSocketsServer L25: Despachando para room: "+room);
 		this.socketServer.to(room).emit(eventype,msgObj);
-
 	}
 
 
@@ -45,19 +42,17 @@ class WebSocketsServer{
 		    	type: 'connected',
 				code: 200,
 			});
-		    console.log("Se ha conectado: "+socket.id);
+		    console.log("Socket: "+socket.id+" has been connected");
 		    this.pubsub.publish('connection',socket);
-		    //console.log(socketServer.sockets);
-		    //console.log(socket.client);
 
-		    /* suscribe un socket a un room */
+		    /* It subscribes a socket to a room */
 		    socket.on('subscribe', (data)=>{ 
 
 		    	let msgObj = {}
 		    	if (typeof this.socketServer.sockets.adapter.rooms[data.room] != 'undefined'){
-		    		console.log("El room existe y tiene "+this.socketServer.sockets.adapter.rooms[data.room].length+" sockets conectados");
+		    		console.log("The room already exists and it has "+this.socketServer.sockets.adapter.rooms[data.room].length+" connected sockets.");
 		    		if (this.socketServer.sockets.adapter.rooms[data.room].length < this.maxUserPerRoom){
-		    			console.log("Registrando el socket "+socket.id+" al room "+data.room+".");
+		    			console.log("Registering socket "+socket.id+" to room "+data.room+".");
 		    			socket.join(data.room); 
 		    			msgObj = {
 		    				code: 200,
@@ -65,18 +60,20 @@ class WebSocketsServer{
 		    				members : this.socketServer.sockets.adapter.rooms[data.room].length,
 		    				joined : true,
 		    			}
+		    			//Returns a notification to socket
 		    			this.emmitMessageToSingleSocket ("message",msgObj,socket.id);
 		    		}
 		    		else{
-		    			console.log("No es posible registrar el socket "+socket.id+" al room "+data.room+", room completo");
-		    			msgObj.error = "El room está completo";
+		    			console.log("It is not possible to connect "+socket.id+" to room "+data.room+", full room");
+		    			msgObj.error = "Full room";
 		    			msgObj.code = 412;//HTTP 412 Error, 412 Precondition Failed
 		    			msgObj.type = 'no joined';
+		    			//Returns a notification to socket
 		    			this.emmitMessageToSingleSocket ("error",msgObj,socket.id);
 		    		}
 		    	}
 		    	else{
-		    		console.log("Creando el nuevo room "+data.room+" y registrando el socket "+socket.id+"...");
+		    		console.log("Creating a new room: "+data.room+" and registering socket "+socket.id+"...");
 		    		socket.join(data.room); 
 		    		msgObj = {
 		    			code: 200,
@@ -84,13 +81,14 @@ class WebSocketsServer{
 						members : this.socketServer.sockets.adapter.rooms[data.room].length,
 						joined : true,
 	    			}
-	    			//Retorna la notificación al socket
+	    			//Returns a notification to socket
 		    		this.emmitMessageToSingleSocket ("message",msgObj,socket.id);
-		    		//Emite el mensaje para los clientes que están conectados al PubSub de este metodo
-		    		data.msgObj = msgObj;
-		    		data.socketid = socket.id;
-		    		this.pubsub.publish('subscribe',data);
 		    	}
+
+		    	//It emmits a message to subcribers (PubSub pattern)
+		    	data.msgObj = msgObj;
+		    	data.socketid = socket.id;
+		    	this.pubsub.publish('subscribe',data);
 		    })
 
 		    /* desuscribe a un socket de un room */
@@ -99,20 +97,38 @@ class WebSocketsServer{
 		        //Retorna la notificación al socket
 		        let msgObj = {
 		        	code: 200,
-		        	msg: 'Ha salido del room '+data.room,
+		        	msg: 'You have left the room: '+data.room,
 		        	type: 'leave'
 		        }
 	    		this.emmitMessageToSingleSocket ("message",msgObj,socket.id);
 	    		//Emite el mensaje para los clientes que están conectados al PubSub de este metodo
 	    		data.msgObj = msgObj;
 	    		data.socketid = socket.id;
-	    		this.pubsub.publish('subscribe',data);
+	    		this.pubsub.publish('unsubscribe',data);
 		    })
 
 		    socket.on('send', (data)=>{
 		        socket.sockets.in(data.room).emit('message', data.message);
 		    });
 
+		    /**
+			* This event handler expects the data object  to re-send this data to 
+			* functions registered in the data.topic subject.
+			* 
+			* In the client side (browser) a message must have this structure:
+			*
+			*		msgObj = {
+			*
+			*			topic: 'connectto',
+			*			info: {
+			*				id: remoteId
+			*			}
+			*		socket.emit("message",msgObj);
+			*
+			* In this example, the data passed in msgObj (object) is send to any function
+			* registered for topic "connectto".
+			*
+		    */
 		    socket.on('message',(data)=>{
 		    	console.log(data);
 		        console.log("=======================\n");

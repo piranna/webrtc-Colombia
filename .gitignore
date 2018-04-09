@@ -3,5 +3,7 @@ node_modules/
 node_modules/*
 public/jspm_packages/
 public/jspm_packages/*
+public/bower_components/
+public/bower_components/*
 CERTS
 config.js

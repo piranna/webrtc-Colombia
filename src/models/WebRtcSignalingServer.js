@@ -6,11 +6,20 @@ class WebRtcSignalingServer{
 
 	//let wss = {};
 
-	constructor(webSocketServer) {
+	constructor(webSocketServer,evKurentoClt,evKurentoClientRegistry) {
+		/* Defining local dependencies */
 		this.wss = webSocketServer;
+		this.evKurentoClt = evKurentoClt;
+		this.cltRegistry = evKurentoClientRegistry;
+
+
+		/* Binding to local scope the "this" reference " */
 		this.dispatchIpAddr = this.dispatchIpAddr.bind(this);
 		this.notifyNewConnection = this.notifyNewConnection.bind(this);
 		this.getAllConnectedUsers = this.getAllConnectedUsers.bind(this);
+		this.call = this.call.bind(this);
+		this.responseCall = this.responseCall.bind(this);
+		this.hangOut = this.hangOut.bind(this);
 	}
 
 	dispatchIpAddr(data){
@@ -64,6 +73,36 @@ class WebRtcSignalingServer{
 		
 	}
 
+
+	/**
+	* This method add a new client to the client's registry. 
+	* 
+	* @param {object} data - Data object must have data.uid and data.name at least
+	*/
+	registeringClient(clt){
+		this.cltRegistry.addClient(clt);
+	}
+
+
+	call(data){
+
+		let callerId = data.callerId;
+		let calleeId = data.calleeId;
+		let sdpOffer = data.sdpOffer;
+
+
+	}
+
+
+	responseCall(){
+
+
+	}
+
+	hangOut(){
+
+
+	}
 }
 
 

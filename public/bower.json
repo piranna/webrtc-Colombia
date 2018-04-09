@@ -1,0 +1,32 @@
+{
+  "name": "webrtc-client",
+  "version": "0.1.0",
+  "description": "",
+  "authors": [
+    "@maomuriel",
+    "Mauricio Muriel <mauricio.muriel@calitek.net>"
+  ],
+  "main": "index.html",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "ALv2",
+  "homepage": "http://www.kurento.org/",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "adapter.js": "v0.2.9",
+    "ekko-lightbox": "~3.3.0",
+    "demo-console": "1.5.1",
+    "kurento-client": "master",
+    "kurento-utils": "master",
+    "jquery": "^3.3.1",
+    "socket.io-client": "^2.1.0"
+  }
+}

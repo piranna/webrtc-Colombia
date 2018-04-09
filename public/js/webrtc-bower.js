@@ -1,13 +1,18 @@
+/*
 import $ from 'jquery';
 import io from 'socket.io-client';
 import uidgen from 'uid-safe';
+*/
 //import kurento = require('kurento/kurento-client-js');
 
-let kcl = typeof KurentoClient;
-console.log(kcl);
 
-const mainSocket = io('https://192.168.1.7:12000');
-let uid = uidgen.sync(14);
+
+console.log(kurentoUtils);
+const mainSocket = io('https://192.168.1.7:8443');
+
+
+//let uid = uidgen.sync(14);
+const uid = lil.uuid();
 let htmlConsole = document.querySelector(".console");
 let clickHandler = ("ontouchstart" in window ? "touchend" : "click")
 

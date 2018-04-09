@@ -10,11 +10,14 @@
         <link rel="manifest" href="site.webmanifest">
         <link rel="apple-touch-icon" href="icon.png">
         <!-- Place favicon.ico in the root directory -->
-
+        
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/socket.io-client/dist/socket.io.js"></script>
+        <script src="bower_components/lil-uuid/uuid.min.js"></script>
         <!-- Modules loaded by bower, this are KURENTO CLIENT libraries -->
         <script src="bower_components/adapter.js/adapter.js"></script>
-        <script src="bower_components/kurento-client/js/kurento-client.js"></script>
-        <script src="bower_components/kurento-utils/js/kurento-utils.js"></script>
+        <script src="bower_components/kurento-client/js/kurento-client.min.js"></script>
+        <script src="bower_components/kurento-utils/js/kurento-utils.min.js"></script>
         <!-- END KURENTO CLIENT libraries -->
 
 
@@ -51,11 +54,8 @@
         <footer>
             <div class="console"></div>
         </footer>
-        <script src="jspm_packages/system.js"></script>
-        <script src="config.js"></script>
-        <script>
-        System.import('js/webrtc.js');
-        </script>
 		<!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+
+        <script type="text/javascript" src="js/webrtc-bower.js"></script>
     </body>
 </html>

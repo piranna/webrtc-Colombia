@@ -3,11 +3,14 @@
 let minimist = require('minimist');
 
 /* Own modules */
+let config = require('./config.js');
 let WebSecureServer = require('./src/models/WebSecureServer');
 let WebServer = require('./src/models/WebServer');
 let WebSocketsServer = require('./src/models/WebSocketsServer');
 let WebRtcSignalingServer = require('./src/models/WebRtcSignalingServer');
-let config = require('./config.js');
+let EvKurentoClient = require('./src/modules/EvKurentoClient');
+let EvKurentoClientRegistry = require('./src/models/EvKurentoClientRegistry');
+
 
 /* Getting params from command line */
 let argv = minimist(process.argv.slice(2), {
@@ -24,6 +27,11 @@ let port = 12000;
 let kurentoClt = null;
 let mediaPipeLine = null;
 
+
+/** 
+  Starting http server
+
+*/
 if(process.argv[2] && typeof process.argv[2] === 'string'){
 
   switch(process.argv[2]){
@@ -51,51 +59,58 @@ if(process.argv[2] && typeof process.argv[2] === 'string'){
   return "";
 }
 
-/* Starting servers */
+/** Starting websockets server and WebRTC signaling module */
+
+
 
 let wsServer = new WebSocketsServer(httpserver.wserver);
 wsServer.startToListenSocketsEvents();
-let webRtcSignalingSrv = new WebRtcSignalingServer(wsServer);
+EvKurentoClient.getKurentoClt((error,kc)=>{
 
-/* Viculando el administrador de eventos de WebRTC al servidor de sockets mediante el patrón Pub/Sub */
+  if (error){
+    console.log("Error starting Kurento client...");
+    console.log(error);
+    return error;
+  }
+  console.log("Starting Kurento client...");
+})
+
+
+let webRtcSignalingSrv = new WebRtcSignalingServer(wsServer,EvKurentoClient,new EvKurentoClientRegistry());
+
+/**
+  ESP: 
+  Viculando el administrador de eventos de WebRTC al servidor de sockets mediante el patrón Pub/Sub 
+
+  ENG: 
+  Linking webrtc events handler (signaling) with websocket server, using Pub/Sub pattern.
+*/
+
+
+
+
 wsServer.subscribeToEvents('ipaddr',webRtcSignalingSrv.dispatchIpAddr);
 wsServer.subscribeToEvents('getallclients',webRtcSignalingSrv.getAllConnectedUsers);
 wsServer.subscribeToEvents('connection',webRtcSignalingSrv.notifyNewConnection);
+
+/* WebRTC with Kurento signaling methods */
+wsServer.subscribeToEvents('call',webRtcSignalingSrv.call);
+wsServer.subscribeToEvents('responsecall',webRtcSignalingSrv.responseCall);
+wsServer.subscribeToEvents('hangout',webRtcSignalingSrv.hangOut);
+wsServer.subscribeToEvents('subscribe',(data)=>{
+
+  if (data.msgObj.type == 'joined'){
+    let clt = {
+      uid:data.uid,
+      name: data.name,
+      socketid: data.socketid
+    }
+    webRtcSignalingSrv.registeringClient(clt);
+  }
+
+});
 //wsServer.subscribeToEvents('ipaddr',webRtcSignalingSrv.dispatchIpAddr);
 
-
-
-
-
-
-
-
-/*
-  Genera el cliente de kurento que se conecta al servidor 
-  Retorna una promesa que en caso de ser exitosa recibirá el objeto Kurento-Cliente 
-
-  @author: @maomuriel
-  @return: {Promise} La función que se ejecuta cuando se resuelve la promesa recibe el objeto kurento-cliente
-
-*/
-
-let EvKurentoClt = require('./src/modules/EvKurento');
-let ctrlSetInterval = setInterval(()=>{
-  //console.log(EvKurentoClt.getKurentoClt())
-  if (EvKurentoClt.getKurentoClt() == null){
-    console.log("Kurento Client is not ready yet");
-  }
-  else{
-
-    EvKurentoClt.getKurentoClt().create("MediaPipeline",(error,pl)=>{
-
-      console.log(pl);
-
-    });
-    clearInterval(ctrlSetInterval);
-  }
-
-},500);
 
 
 

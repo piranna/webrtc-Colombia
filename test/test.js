@@ -32,6 +32,7 @@ let WebSecureServer = require('../src/models/WebSecureServer');
 let WebServer = require('../src/models/WebServer');
 let WebSocketsServer = require('../src/models/WebSocketsServer');
 let EvKurentoClient = require('../src/modules/EvKurentoClient.js');
+let EvKurentoClientRegistry = require('../src/models/EvKurentoClientRegistry.js');
 
 let httpsServer = new WebSecureServer(configData.pathToPublic,configData.httpsPort,options);
 //let httpServer = new WebSecureServer(configData.pathToPublic,configData.httpPort);
@@ -51,12 +52,6 @@ let SoapClient = require('../dist/sg-syncer/models/SoapClient.js');
 /*
 	Starting test cases
 */
-
-describe('Module to Test',function(){
-	it ('Test #1',function(){
-		console.log("Testing #1...");
-	});
-});
 
 
 describe('Testing web server over ssl',function(){
@@ -157,6 +152,64 @@ describe('Testing EvKurentoClient module',function(){
 });
 
 
+
+
+describe('Testing EvKurentoClientRegistry class',function(){
+
+
+	/**
+	*	This test verifies the creation of the Kurento Client
+	*/
+	const evKurentoCltReg = new EvKurentoClientRegistry();
+
+	it ('If it add a new client to the registry it must return ok and registry.length must be 1',()=>{
+
+		let firstClient = {
+			uid : '733e3e55-437a-47b9-91c9-3daa2af38912',
+			name : 'MMMA',
+			socketid : '92b7ddc3-5df7-4e72-b641-7714f2f7b1ea',
+		}
+
+		let returnVal = evKurentoCltReg.addClient(firstClient);
+		chai.assert.isOk(returnVal,`There is a problem adding the client: ${firstClient.uid}`);
+		chai.assert.equal(1,evKurentoCltReg.getRegistryLength(),`Registry must be 1 client length, it is : ${evKurentoCltReg.getRegistryLength()}`);
+
+	});
+
+	it ('Gets a client by uid',()=>{
+
+		let clt = evKurentoCltReg.getClientByUid('733e3e55-437a-47b9-91c9-3daa2af38912');
+		chai.assert.equal('MMMA',clt.name,`There is a problem getting the client identifyed by: 733e3e55-437a-47b9-91c9-3daa2af38912`);
+
+	});
+
+
+	it ('If you try to add an already registered client, it must fail',()=>{
+
+		let anotherClient = {
+			uid : '733e3e55-437a-47b9-91c9-3daa2af38912',
+			name : 'MMMA',
+			socketid : '92b7ddc3-5df7-4e72-b641-7714f2f7b1ea',
+		}
+
+		let returnVal = evKurentoCltReg.addClient(anotherClient);
+		chai.assert.isNotOk(returnVal,`Something fail, it must be false, ${returnVal} instead`);
+	});
+
+
+	it ('If it checks for an already registered client, it must return true',()=>{
+
+		let anotherClient = {
+			uid : '733e3e55-437a-47b9-91c9-3daa2af38912',
+			name : 'MMMA',
+			socketid : '92b7ddc3-5df7-4e72-b641-7714f2f7b1ea',
+		}
+
+		let returnVal = evKurentoCltReg.isClientAlreadyRegistered(anotherClient);
+		chai.assert.isOk(returnVal,`Something fail, it must be true, ${returnVal} instead`);
+	});
+
+});
 
 /*
 

@@ -14,6 +14,7 @@ System.config({
   },
 
   map: {
+    "PubSub": "npm:PubSub@3.4.0",
     "babel": "npm:babel-core@5.8.38",
     "babel-preset-es2015": "npm:babel-preset-es2015@6.24.1",
     "babel-preset-react": "npm:babel-preset-react@6.24.1",
@@ -30,7 +31,7 @@ System.config({
       "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.1": {
-      "buffer": "npm:buffer@5.0.8"
+      "buffer": "npm:buffer@5.1.0"
     },
     "github:jspm/nodelibs-constants@0.1.0": {
       "constants-browserify": "npm:constants-browserify@0.0.1"
@@ -94,6 +95,9 @@ System.config({
     },
     "github:jspm/nodelibs-zlib@0.1.0": {
       "browserify-zlib": "npm:browserify-zlib@0.1.4"
+    },
+    "npm:PubSub@3.4.0": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:accepts@1.3.3": {
       "mime-types": "npm:mime-types@2.1.17",
@@ -466,9 +470,9 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
-    "npm:buffer@5.0.8": {
-      "base64-js": "npm:base64-js@1.2.1",
-      "ieee754": "npm:ieee754@1.1.8"
+    "npm:buffer@5.1.0": {
+      "base64-js": "npm:base64-js@1.2.3",
+      "ieee754": "npm:ieee754@1.1.11"
     },
     "npm:bufferutil@3.0.3": {
       "bindings": "npm:bindings@1.3.0",

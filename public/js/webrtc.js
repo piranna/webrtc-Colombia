@@ -1,12 +1,23 @@
 import $ from 'jquery';
 import io from 'socket.io-client';
 import uidgen from 'uid-safe';
+import WssMessageHandler from './models/WssMessageHandler.js';
 //import kurento = require('kurento/kurento-client-js');
 
-let kcl = typeof KurentoClient;
-console.log(kcl);
+//let kcl = typeof KurentoClient;
+console.log(WssMessageHandler);
 
-const mainSocket = io('https://192.168.1.7:12000');
+const wssMsgHandler = new WssMessageHandler();
+/**
+*
+*	It defines handlers for messages coming from websocket server
+* 
+*/
+
+wssMsgHandler.subscribeToEvents('joined',);
+wssMsgHandler.subscribeToEvents('nojoined',);
+
+const mainSocket = io('https://192.168.1.7:8443');
 let uid = uidgen.sync(14);
 let htmlConsole = document.querySelector(".console");
 let clickHandler = ("ontouchstart" in window ? "touchend" : "click")
@@ -18,6 +29,9 @@ let peercon = 1;
 
 $(document).ready(()=>{
 
+
+	/* 0. Asking user for a nickname */
+	let nickname = window.prompt("Set your nickname...");
     
     /* 1. Conecta el servidor de sockets */
 	mainSocket.emit("message","Conectado...");
@@ -105,5 +119,12 @@ $(document).ready(()=>{
 
 
 })
+
+
+
+function setNickName(){
+
+
+}
 
 

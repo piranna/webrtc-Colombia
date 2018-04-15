@@ -20,6 +20,7 @@ class WebRtcSignalingServer{
 		this.call = this.call.bind(this);
 		this.responseCall = this.responseCall.bind(this);
 		this.hangOut = this.hangOut.bind(this);
+		this.disconnectSocket = this.disconnectSocket.bind(this);
 	}
 
 	dispatchIpAddr(data){
@@ -57,7 +58,7 @@ class WebRtcSignalingServer{
 	getAllConnectedUsers(idSocketToResponse){
 
 		let msgObj ={
-			type: 'all clients',
+			type: 'all sockets',
 			code: 200,
 			clients: [],
 		}
@@ -68,6 +69,31 @@ class WebRtcSignalingServer{
 		console.log(msgObj)
 		this.wss.emmitMessageToSingleSocket ('message',msgObj,idSocketToResponse);
 		
+	}
+
+	/**
+	* This function hanldes a socket disconnection
+	* 
+	* @param {Object} data - This is a plain javascript object with next attributes: data.reason, data.socketid
+	*
+	*/
+	disconnectSocket(data){
+
+		/* Deletes from clients registry */
+		let cltToDel = this.cltRegistry.getClientBySocketId(data.socketid);
+		this.cltRegistry.deleteClient(cltToDel);
+
+		/* Notifies to other connected sockets the updated list of clients connected */
+		let msgObj ={
+			type: 'all clients',
+			code: 200,
+			clients: this.cltRegistry.registry,
+		}
+		//console.log(this.wss.socketServer.sockets);
+		console.log(msgObj)
+		this.wss.emmitMessageToSockets ('message',msgObj);
+
+
 	}
 
 

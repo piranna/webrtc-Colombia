@@ -107,12 +107,20 @@ class WebSocketsServer{
 	    		this.pubsub.publish('unsubscribe',data);
 		    })
 
+		    /**
+		    * This event handler re-send data object to any other socket connected
+		    * to room defined in data.room
+		    * 
+		    * @param {Object} data - This object has the payload to resend other sockets joined to data.room room
+		    */
 		    socket.on('send', (data)=>{
 		        socket.sockets.in(data.room).emit('message', data.message);
 		    });
 
+
+
 		    /**
-			* This event handler expects the data object  to re-send this data to 
+			* This event handler expects the data object to re-send this object to 
 			* functions registered in the data.topic subject.
 			* 
 			* In the client side (browser) a message must have this structure:
@@ -134,6 +142,18 @@ class WebSocketsServer{
 		        console.log("=======================\n");
 				this.pubsub.publish(data.topic,data.info);
 		    });
+
+		    /**
+		    *
+		    * Event handler for sockets when they have been disconnected
+		    *
+		    */
+		    socket.on('disconnect',(reason)=>{
+
+		    	console.log(`Socket ${socket.id} has been disconnected`);
+		    	this.pubsub.publish('disconnect',({reason: reason,socketid:socket.id}));
+
+		    })
 		});
 
 	};

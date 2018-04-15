@@ -106,7 +106,7 @@ wsServer.subscribeToEvents('getallclients',(data)=>{
 });
 
 
-
+wsServer.subscribeToEvents('disconnect',webRtcSignalingSrv.disconnectSocket);
 
 
 

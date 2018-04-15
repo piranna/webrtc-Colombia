@@ -1,12 +1,13 @@
 import PubSub from 'PubSub';
 
-class WssMessageHandler{
+class WssCommingMessageHandler{
 
-	constructor(){
+	constructor(socket){
 		this.pubsub = new PubSub();
 		this.onMesage = this.onMesage.bind(this);
 		this.unSubscribeToEvents = this.unSubscribeToEvents.bind(this);
 		this.subscribeToEvents = this.subscribeToEvents.bind(this);
+		this.socket = socket;
 	}
 
 	subscribeToEvents (topic,callback){
@@ -19,10 +20,13 @@ class WssMessageHandler{
 
 	onMesage(data){
 
-		this.pubsub.publish(data.topic,data);
+		console.log("- WssMessageHandler");
+		console.log(data);
+		data.socket = this.socket;
+		this.pubsub.publish(data.type,data);
 
 	}
 
 }
 //module.exports = exports = WssMessageHandler;
-export default WssMessageHandler;
+export default WssCommingMessageHandler;

@@ -63,11 +63,22 @@ class WebRtcSignalingServer{
 		}
 		//console.log(this.wss.socketServer.sockets);
 		for (let client in this.wss.socketServer.sockets.connected){
-
-			console.log(client);
 			msgObj.clients.push(client);
 		}
+		console.log(msgObj)
+		this.wss.emmitMessageToSingleSocket ('message',msgObj,idSocketToResponse);
+		
+	}
 
+
+	getAllConnectedClients(idSocketToResponse){
+
+		let msgObj ={
+			type: 'all clients',
+			code: 200,
+			clients: this.cltRegistry.registry,
+		}
+		//console.log(this.wss.socketServer.sockets);
 		console.log(msgObj)
 		this.wss.emmitMessageToSingleSocket ('message',msgObj,idSocketToResponse);
 		
@@ -77,31 +88,35 @@ class WebRtcSignalingServer{
 	/**
 	* This method add a new client to the client's registry. 
 	* 
-	* @param {object} data - Data object must have data.uid and data.name at least
+	* @param {object} clt - Data object must have at least, clt.uid and clt.name
 	*/
 	registeringClient(clt){
+		//Add client to local registry
 		this.cltRegistry.addClient(clt);
+		console.log(this.cltRegistry);
+		let msgObj = {
+			type: 'new subscription',
+			code:200,
+			uid:clt.uid,
+			name:clt.name,
+			socketid:clt.socketid
+		}
+		//it notifies to another clients about the new connection
+		this.wss.emmitMessageToSockets ('message',msgObj);
 	}
 
 
 	call(data){
-
 		let callerId = data.callerId;
 		let calleeId = data.calleeId;
 		let sdpOffer = data.sdpOffer;
-
-
 	}
 
 
 	responseCall(){
-
-
 	}
 
 	hangOut(){
-
-
 	}
 }
 

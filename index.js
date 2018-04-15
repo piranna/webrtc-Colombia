@@ -87,18 +87,8 @@ let webRtcSignalingSrv = new WebRtcSignalingServer(wsServer,EvKurentoClient,new 
 */
 
 
-
-
-wsServer.subscribeToEvents('ipaddr',webRtcSignalingSrv.dispatchIpAddr);
-wsServer.subscribeToEvents('getallclients',webRtcSignalingSrv.getAllConnectedUsers);
 wsServer.subscribeToEvents('connection',webRtcSignalingSrv.notifyNewConnection);
-
-/* WebRTC with Kurento signaling methods */
-wsServer.subscribeToEvents('call',webRtcSignalingSrv.call);
-wsServer.subscribeToEvents('responsecall',webRtcSignalingSrv.responseCall);
-wsServer.subscribeToEvents('hangout',webRtcSignalingSrv.hangOut);
 wsServer.subscribeToEvents('subscribe',(data)=>{
-
   if (data.msgObj.type == 'joined'){
     let clt = {
       uid:data.uid,
@@ -107,8 +97,33 @@ wsServer.subscribeToEvents('subscribe',(data)=>{
     }
     webRtcSignalingSrv.registeringClient(clt);
   }
-
 });
+
+
+wsServer.subscribeToEvents('getallclients',(data)=>{
+  console.log(data);
+  webRtcSignalingSrv.getAllConnectedClients(data.idsocket);
+});
+
+
+
+
+
+
+
+
+
+
+
+wsServer.subscribeToEvents('ipaddr',webRtcSignalingSrv.dispatchIpAddr);
+
+
+
+/* WebRTC with Kurento signaling methods */
+wsServer.subscribeToEvents('call',webRtcSignalingSrv.call);
+wsServer.subscribeToEvents('responsecall',webRtcSignalingSrv.responseCall);
+wsServer.subscribeToEvents('hangout',webRtcSignalingSrv.hangOut);
+
 //wsServer.subscribeToEvents('ipaddr',webRtcSignalingSrv.dispatchIpAddr);
 
 

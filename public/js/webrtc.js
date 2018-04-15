@@ -1,48 +1,114 @@
+/* Import libraries */
 import $ from 'jquery';
 import io from 'socket.io-client';
-import uidgen from 'uid-safe';
-import WssMessageHandler from './models/WssMessageHandler.js';
 //import kurento = require('kurento/kurento-client-js');
 
-//let kcl = typeof KurentoClient;
-console.log(WssMessageHandler);
+/* Import models */
+import WssCommingMessageHandler from './models/WssCommingMessageHandler.js';
+import EvClientIdentity from './models/EvClientIdentity.js';
+import EvClients from './models/EvClients.js';
 
-const wssMsgHandler = new WssMessageHandler();
+/* Import Classes */
+import EvClientNickNameSetter from './classes/EvClientNickNameSetter.js';
+import EvClientWsConectedHandler from './classes/EvClientWsConectedHandler.js';
+import EvClientWsJoinedToRoomHandler from './classes/EvClientWsJoinedToRoomHandler.js';
+import EvClientWsNewConnectionHandler from './classes/EvClientWsNewConnectionHandler';
+import EvClientWsNewSubscriptionHandler from './classes/EvClientWsNewSubscriptionHandler';
+import EvClientWsGetAllClientsHandler from './classes/EvClientWsGetAllClientsHandler'
+import EvClientsDrawer from './classes/EvClientsDrawer';
+
+
+
 /**
-*
-*	It defines handlers for messages coming from websocket server
-* 
+* New object to draw the clients list
 */
+const cltsDrawer = new EvClientsDrawer();
 
-wssMsgHandler.subscribeToEvents('joined',);
-wssMsgHandler.subscribeToEvents('nojoined',);
 
-const mainSocket = io('https://192.168.1.7:8443');
-let uid = uidgen.sync(14);
+/**
+* It creates the clients object
+*/
+const evClients = new EvClients();
+
+/**
+* It connects to websocket and webrtc signaling server.
+*/
+const mainSocket = io('https://192.168.1.6:8443');
+
+/**
+*	It defines the identity object
+*/
+const cltIdentity = new EvClientIdentity();
+
+/**
+*	It defines handlers for messages coming from websocket server
+*/
+const evcltWsOnConnectedHandler = new EvClientWsConectedHandler();
+const evCltWsJoinedToRoomHandler = new EvClientWsJoinedToRoomHandler();
+const evCltWsNewConnectionHandler = new EvClientWsNewConnectionHandler();
+const evCltWsNewSubscriptionHandler = new EvClientWsNewSubscriptionHandler();
+const evCltWsGetAllClientsHandler = new EvClientWsGetAllClientsHandler(cltsDrawer);
+
+
+const wssMsgHandler = new WssCommingMessageHandler(mainSocket);
+
+wssMsgHandler.subscribeToEvents('connected',evcltWsOnConnectedHandler.onConnected);//Connected to websocket server
+wssMsgHandler.subscribeToEvents('joined',evCltWsJoinedToRoomHandler.onJoined);
+
+wssMsgHandler.subscribeToEvents('new subscription',(data)=>{
+	evCltWsNewSubscriptionHandler.onNewSubscription(data,mainSocket,cltIdentity);
+});
+
+wssMsgHandler.subscribeToEvents('all clients',(data)=>{
+	evClients.clients = data.clients;
+	evCltWsGetAllClientsHandler.onGetAllClients(evClients);
+});
+//wssMsgHandler.subscribeToEvents('nojoined',);
+
+
+/**
+* It instantiates an object to handle the prompt for nickname
+*/
+const evNickSetter = new EvClientNickNameSetter();
+
+
+
+
 let htmlConsole = document.querySelector(".console");
 let clickHandler = ("ontouchstart" in window ? "touchend" : "click")
 
-/* deja en el ámbito global el flujo de datos */
+
 
 let localAudio, localVideo = {};
 let peercon = 1;
 
+
+/** 
+* It delegates any message coming from signaling server to
+* WssMessageHandler instance.
+*/
+mainSocket.on("message",(data)=>{
+	wssMsgHandler.onMesage(data);
+})
+
+
+
+
+
 $(document).ready(()=>{
 
 
-	/* 0. Asking user for a nickname */
-	let nickname = window.prompt("Set your nickname...");
-    
-    /* 1. Conecta el servidor de sockets */
-	mainSocket.emit("message","Conectado...");
-
-	mainSocket.on("message",(data)=>{
-
-		console.log(data);
-		htmlConsole.innerHTML = mainSocket.id;
-
-
-	})
+	/* 1. Asking user for a nickname */
+	 do{
+	 	cltIdentity.name = evNickSetter.getNickName();
+	 } while (cltIdentity.name == '' || typeof cltIdentity.name == 'undefined' || cltIdentity.name==null)
+    /* 2. It registers client in signaling server */
+	mainSocket.emit("subscribe",{
+		room: 'ev',
+		uid: cltIdentity.uid,
+		name:cltIdentity.name,
+		socketid:mainSocket.id
+	});
 
 
 	/* 2. Toma los datos multimedia locales */
@@ -97,34 +163,27 @@ $(document).ready(()=>{
 	console.log(peercon);
 
 
-	/* Maneja la vinculación al otro cliente */
+	
 
-	$("#btn-send").on(clickHandler,(e)=>{
 
-		e.preventDefault();
-		let remoteId = $(e.target).siblings("#jointo").val();
-		let msgObj = {
+});
 
-			topic: 'connectto',
-			info: {
-				id: remoteId
-			}
 
+/* Maneja la vinculación al otro cliente */
+$("#btn-send").on(clickHandler,(e)=>{
+	e.preventDefault();
+	let remoteId = $(e.target).siblings("#jointo").val();
+	let msgObj = {
+		topic: 'connectto',
+		info: {
+			id: remoteId
 		}
-
-		console.log(msgObj);
-		mainSocket.emit("message",msgObj);
-
-	})
-
-
+	}
+	console.log(msgObj);
+	mainSocket.emit("message",msgObj);
 })
 
 
 
-function setNickName(){
-
-
-}
 
 

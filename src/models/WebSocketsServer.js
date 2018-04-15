@@ -9,7 +9,7 @@ class WebSocketsServer{
 		/* Instancia un servidor de websockets */
 		this.socketServer = new socketio(httpServer);
 		this.pubsub = new PubSub();
-		this.maxUserPerRoom = 2;
+		this.maxUserPerRoom = 15;
 		console.log("Starting websockets server...")
 	}
 
@@ -37,7 +37,7 @@ class WebSocketsServer{
 
 		this.socketServer.sockets.on('connection', (socket)=>{
 
-		    /* Registra el socket */
+		    /* It notifies to socket, it has been connected */
 		    socket.emit('message',{
 		    	type: 'connected',
 				code: 200,

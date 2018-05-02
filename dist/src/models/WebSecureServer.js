@@ -2,18 +2,22 @@
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var http = require('http');
+var https = require('https');
 var url = require('url');
 var fs = require('fs');
 var path = require('path');
 
-var WebServer = function WebServer(pathToPublic, httpPort) {
+var WebSecureServer = function WebSecureServer(pathToPublic, httpPort, options) {
 	var _this = this;
 
-	_classCallCheck(this, WebServer);
+	_classCallCheck(this, WebSecureServer);
 
 	this.pathToPublic = pathToPublic;
-	this.wserver = http.createServer(function (req, res) {
+	this.options = {
+		key: fs.readFileSync(options.key),
+		cert: fs.readFileSync(options.cert)
+	};
+	this.wserver = https.createServer(this.options, function (req, res) {
 
 		var pathReq = url.parse(req.url).pathname;
 		var pathToHtmlFiles = _this.pathToPublic + '' + pathReq;
@@ -77,7 +81,7 @@ var WebServer = function WebServer(pathToPublic, httpPort) {
 //Usando require();
 
 
-module.exports = exports = WebServer;
+module.exports = exports = WebSecureServer;
 
 //Usando Import
 //export default FileWatcher;

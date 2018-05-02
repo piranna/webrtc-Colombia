@@ -4,7 +4,8 @@ let EvKurentoClient = ((kurento,config)=>{
 
 	let _kurentoClt = null;
 	let _argv = {};
-	let _pipeLines = [];
+	let _kurento = kurento;
+	
 	/**
 		Possible values: 
 		- 0: No KC created and there is no request to create one.
@@ -13,13 +14,6 @@ let EvKurentoClient = ((kurento,config)=>{
 	*/
 	let _ctrlKurentoCltCreation = 0; 
 
-
-	/*
-	kurento.KurentoClient(config.kurento.ws_uri,function(error,kc){
-		_kurentoClt = kc;
-
-	});
-	*/
 
 
 	function _getKurentoClt(callback){
@@ -42,13 +36,6 @@ let EvKurentoClient = ((kurento,config)=>{
 
 	}
 
-	/* By default it starts a kurento client object */
-	//_getKurentoClt((error,kc)=>{ 
-	//	console.log("Creating the Kurento-Client");
-	//});
-
-
-
 
 	function _createPipeLine(callback){
 
@@ -62,15 +49,12 @@ let EvKurentoClient = ((kurento,config)=>{
 				callback(error);
 				return error;
 			}
-			_pipeLines.push(pl);
 			callback(null,pl);
 		})
 
 	}
 
-
 	function _createMediaElement(pl,medEleType,options,callback){
-
 		if (typeof options != 'Function' && options != null && options != ''){
 			pl.create(medEleType,options,(error,me)=>{
 				if (error){
@@ -123,24 +107,17 @@ let EvKurentoClient = ((kurento,config)=>{
 				return ({error: false,msg: "Creating a kurento client is on working, please wait for callback function execution..."})
 			}
 		},
-		getPipeLines: ()=>{
-			return _pipeLines;
-		},
 		createPipeline: (callback)=>{
-			_createPipeLine(callback)
-		},
-		getPipelineByIndex: (index)=>{
-
-			if (typeof _pipeLines[index] != 'undefined' && _pipeLines[index]!=null && (_pipeLines[index].constructor.name == 'MediaPipeline')){
-				return _pipeLines[index];
-			}
-			else{
-				return null;
-			}
+			_createPipeLine((error,pl)=>{
+				callback(error,pl);
+			})
 		},
 		createMediaElement: (pl,medEleType,options,callback)=>{
-			_createMediaElement(pl,medEleType,options,callback);
-		}
+			_createMediaElement(pl,medEleType,options,(error,me)=>{
+				callback(error,me);
+			});
+		},
+		kurentolib: _kurento
 	}
 
 

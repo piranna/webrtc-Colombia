@@ -65,6 +65,10 @@ if(process.argv[2] && typeof process.argv[2] === 'string'){
 
 let wsServer = new WebSocketsServer(httpserver.wserver);
 wsServer.startToListenSocketsEvents();
+
+/*
+  It starts the Kurento-Client
+*/
 EvKurentoClient.getKurentoClt((error,kc)=>{
 
   if (error){
@@ -76,6 +80,11 @@ EvKurentoClient.getKurentoClt((error,kc)=>{
 })
 
 
+/*
+
+  Starting the signaling server
+
+*/
 let webRtcSignalingSrv = new WebRtcSignalingServer(wsServer,EvKurentoClient,new EvKurentoClientRegistry());
 
 /**
@@ -98,38 +107,15 @@ wsServer.subscribeToEvents('subscribe',(data)=>{
     webRtcSignalingSrv.registeringClient(clt);
   }
 });
-
-
 wsServer.subscribeToEvents('getallclients',(data)=>{
   console.log(data);
   webRtcSignalingSrv.getAllConnectedClients(data.idsocket);
 });
-
-
 wsServer.subscribeToEvents('disconnect',webRtcSignalingSrv.disconnectSocket);
-
-
-
-
-
-
-
-
-wsServer.subscribeToEvents('ipaddr',webRtcSignalingSrv.dispatchIpAddr);
-
-
-
 /* WebRTC with Kurento signaling methods */
 wsServer.subscribeToEvents('call',webRtcSignalingSrv.call);
-wsServer.subscribeToEvents('responsecall',webRtcSignalingSrv.responseCall);
+wsServer.subscribeToEvents('callResponse',webRtcSignalingSrv.responseCall);
+wsServer.subscribeToEvents('rejectedCall',webRtcSignalingSrv.rejectedCall);
 wsServer.subscribeToEvents('hangout',webRtcSignalingSrv.hangOut);
-
-//wsServer.subscribeToEvents('ipaddr',webRtcSignalingSrv.dispatchIpAddr);
-
-
-
-
-
-
-
+wsServer.subscribeToEvents('icecandidate',webRtcSignalingSrv.onIceCandidate);
 

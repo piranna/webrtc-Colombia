@@ -33,6 +33,7 @@ let WebServer = require('../src/models/WebServer');
 let WebSocketsServer = require('../src/models/WebSocketsServer');
 let EvKurentoClient = require('../src/modules/EvKurentoClient.js');
 let EvKurentoClientRegistry = require('../src/models/EvKurentoClientRegistry.js');
+let EvKurentoPipeLineFactory = require('../src/models/EvKurentoPipeLineFactory.js');
 
 let httpsServer = new WebSecureServer(configData.pathToPublic,configData.httpsPort,options);
 //let httpServer = new WebSecureServer(configData.pathToPublic,configData.httpPort);
@@ -76,6 +77,7 @@ describe('Testing web server over ssl',function(){
 
 describe('Testing EvKurentoClient module',function(){
 
+	let masterPl = {};
 
 	/**
 	*	This test verifies the creation of the Kurento Client
@@ -108,6 +110,8 @@ describe('Testing EvKurentoClient module',function(){
 				console.log(error);
 			}
 
+			masterPl = pl;
+
 			chai.assert.equal(pl.constructor.name,"MediaPipeline",`Error creating MediaPipeline, ${pl.constructor.name} instead`);
 			done();
 
@@ -115,33 +119,12 @@ describe('Testing EvKurentoClient module',function(){
 	});
 
 	/**
-	*	Double checking of Mediapipeline creation
-	*/
-	it ('Verifying MediaPipeline creation',function(){
-		chai.assert.equal(EvKurentoClient.getPipelineByIndex(0).constructor.name,'MediaPipeline',`No MediaPipeline ready, ${EvKurentoClient.getPipelineByIndex(0).constructor.name} instead`);
-	});
-
-	/**
-	*	This test verifies the creation of WebRtcEndpoint over native pipeline object
-	*/
-	it ('Testing RtcEndPoint MediaElement creation over native pipeline object',(done)=>{
-
-		EvKurentoClient.getPipelineByIndex(0).create('WebRtcEndpoint',(error,me)=>{
-
-			chai.assert.equal(me.constructor.name,'WebRtcEndpoint',`Error creating WebRtcEndpoint, ${me.constructor.name} instead`);
-			done();
-
-		});
-
-	})
-
-	/**
 	*	This test verifies the creation of WebRtcEndpoint over EvKurentoClient module
 	*/
 	it ('Testing RtcEndPoint MediaElement creation over EvKurentoClient module',(done)=>{
 
-		let pl = EvKurentoClient.getPipelineByIndex(0);
-		EvKurentoClient.createMediaElement(pl,'WebRtcEndpoint','',(error,me)=>{
+		//let pl = EvKurentoClient.getPipelineByIndex('maowfniu244on24');
+		EvKurentoClient.createMediaElement(masterPl,'WebRtcEndpoint','',(error,me)=>{
 			//console.log(me);
 			chai.assert.equal(me.constructor.name,'WebRtcEndpoint',`Error creating WebRtcEndpoint, ${me.constructor.name} instead`)
 			done();
@@ -210,6 +193,66 @@ describe('Testing EvKurentoClientRegistry class',function(){
 	});
 
 });
+
+
+
+describe('Testing EvKurentoPipeLineFactory',function(){
+
+	let plFactory = {};
+	let pl1on1 = {};
+
+	it("Instatiating an EvKurentoPipeLineFactory object",(done)=>{
+
+		plFactory = new EvKurentoPipeLineFactory();
+		chai.assert.equal('EvKurentoPipeLineFactory',plFactory.constructor.name,`Object type EvKurentoPipeLineFactory wasn't created, ${plFactory.constructor.name} was created instead`);
+		done();
+
+	})
+
+
+	it("Creating an EvKurentoPipeline1On1VideoRecording object, using an EvKurentoPipeLineFactory object",(done)=>{
+
+		pl1on1 = plFactory.createPipeline('1ON1_VIDEO_RECORDING',EvKurentoClient,wssServer);
+		chai.assert.equal('EvKurentoPipeline1On1VideoRecording',pl1on1.constructor.name,`Object type EvKurentoPipeline1On1VideoRecording wasn't created, ${pl1on1.constructor.name} was created instead`);
+		done();
+
+	})
+
+	it("Starting a kurento pipeline object",(done)=>{
+
+		let firstClient = {
+			uid : '733e3e55-437a-47b9-91c9-3daa2af38912',
+			name : 'MMMA',
+			socketid : '92b7ddc3-5df7-4e72-b641-7714f2f7b1ea',
+		}
+
+
+		let anotherClient = {
+			uid : '733e3e55-437a-47b9-91c9-3daa2af38912',
+			name : 'MMMA',
+			socketid : '92b7ddc3-5df7-4e72-b641-7714f2f7b1ea',
+		}
+
+		pl1on1.startPipeline(firstClient,anotherClient,(error,pl)=>{
+
+			if (error){
+				console.log(error);
+			}
+
+			pl1on1 = pl;
+			chai.assert.equal('MediaPipeline',pl1on1._pipeline.constructor.name,`Error creating MediaPipeline object, ${pl1on1._pipeline.constructor.name} was created instead`);
+			done();	
+
+		});
+		
+		
+
+	})
+
+
+
+
+}) 
 
 /*
 

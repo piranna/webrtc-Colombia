@@ -1,5 +1,6 @@
 /* WebRtcSiganlingServer */
 let os = require('os');
+let EvKurentoPipeLineFactory = require('./EvKurentoPipeLineFactory');
 
 
 class WebRtcSignalingServer{
@@ -11,8 +12,11 @@ class WebRtcSignalingServer{
 		this.wss = webSocketServer;
 		this.evKurentoClt = evKurentoClt;
 		this.cltRegistry = evKurentoClientRegistry;
-
-
+		this.sdpOffers = {};
+		this.icecandidates = {};
+		this.pipelines = {};
+		this.kc = {};
+		this.evKurentoPLFactory = new EvKurentoPipeLineFactory();
 		/* Binding to local scope the "this" reference " */
 		this.dispatchIpAddr = this.dispatchIpAddr.bind(this);
 		this.notifyNewConnection = this.notifyNewConnection.bind(this);
@@ -21,6 +25,8 @@ class WebRtcSignalingServer{
 		this.responseCall = this.responseCall.bind(this);
 		this.hangOut = this.hangOut.bind(this);
 		this.disconnectSocket = this.disconnectSocket.bind(this);
+		this.rejectedCall = this.rejectedCall.bind(this);
+		this.onIceCandidate = this.onIceCandidate.bind(this);
 	}
 
 	dispatchIpAddr(data){
@@ -136,13 +142,135 @@ class WebRtcSignalingServer{
 		let callerId = data.callerId;
 		let calleeId = data.calleeId;
 		let sdpOffer = data.sdpOffer;
+		let caller = this.cltRegistry.getClientByUid(callerId);
+		let callee = this.cltRegistry.getClientByUid(calleeId);
+		/* ---------------------------------- */
+		
+		/*
+			Save the sdpOffer sent by caller
+		*/
+		this.sdpOffers[callerId] = sdpOffer;
+		/*
+		*
+		*/
+		console.log(`Sending call request to callee ${callee.socketid}`);
+		let msgObj ={
+			type: 'incomingcall',
+			code: 200,
+			callerId: callerId,
+			sdpOffer: sdpOffer
+		}
+		this.wss.emmitMessageToSingleSocket ('message',msgObj,callee.socketid);
+
 	}
 
 
-	responseCall(){
+	responseCall(data){
+
+		let sdpOffer = data.sdpOffer;
+		let caller = this.cltRegistry.getClientByUid(data.callerId);
+		let callee = this.cltRegistry.getClientByUid(data.calleeId);
+		let msgObj = {};
+		let pl = {};
+		/*
+			Saves the sdpOffer sent by callee
+		*/
+		this.sdpOffers[data.calleeId] = sdpOffer;
+		//1. It creates a new MediaPipeline Kurento Client
+		pl = this.evKurentoPLFactory.createPipeline(data.plType,this.evKurentoClt,this.wss);
+		pl.setIceCandidates(this.icecandidates);
+		pl.setSdpOffers(this.sdpOffers);
+		pl.startPipeline(caller,callee,(error,pl)=>{
+			if(error){
+				console.log(error);
+				return false;
+			}
+			pl.generateSdpAnswer(caller.uid,(error,callerSdpAnswer)=>{
+				if (error){
+
+				}
+				console.log("callerSdpAnswer");
+				console.log(callerSdpAnswer);
+				pl.generateSdpAnswer(callee.uid,(error,calleeSdpAnswer)=>{
+					if(error){
+
+					}
+					console.log("calleeSdpAnswer");
+					console.log(calleeSdpAnswer);
+					//2. It sends to clients the notification to start the comunication
+					msgObj ={
+						type: 'startcomunication',
+						code: 200,
+						calleeId: callee.uid,
+						sdpAnswer: callerSdpAnswer
+					}
+					this.wss.emmitMessageToSingleSocket ('message',msgObj,caller.socketid);
+
+					msgObj ={
+						type: 'startcomunication',
+						code: 200,
+						callerId: caller.uid,
+						sdpAnswer: calleeSdpAnswer
+					}
+					this.wss.emmitMessageToSingleSocket ('message',msgObj,callee.socketid);
+
+				});
+			});
+		});
+		this.pipelines[data.calleeId] = pl;
+		this.pipelines[data.callerId] = pl;
+		//2. 
+		
+
+	}
+
+
+	rejectedCall(data){
+
+		let caller = this.cltRegistry.getClientByUid(data.callerId);
+		let callee = this.cltRegistry.getClientByUid(data.calleeId);
+		//It cleans the sdpOffer sent by caller
+		console.log("sdpOffers 1");
+		console.log(this.sdpOffers);
+		this.sdpOffers[data.callerId] = null;
+		console.log("sdpOffers 2");
+		console.log(this.sdpOffers);
+		Reflect.deleteProperty(this.sdpOffers,data.callerId);
+		console.log("sdpOffers 3");
+		console.log(this.sdpOffers);
+		delete this.sdpOffers[data.callerId];
+		console.log("sdpOffers 4");
+		console.log(this.sdpOffers);
+
+		console.log(`Sending call rejection to caller ${caller.uid}, error: ${data.msg}`);
+		let msgObj ={
+			type: 'rejectedcall',
+			code: 200,
+			msg: data.msg,
+			calleeId: callee.uid
+		}
+		this.wss.emmitMessageToSingleSocket ('message',msgObj,caller.socketid);
 	}
 
 	hangOut(){
+	}
+
+
+	/*
+
+		
+	
+	*/
+	onIceCandidate(data){
+		if (typeof this.pipelines[data.uid] != 'undefined' && typeof this.pipelines[data.uid]._WebRtcEndPoints[data.uid] != 'undefined'){
+			this.pipelines[data.uid]._WebRtcEndPoints[data.uid].addIceCandidate(data.candidate);
+		}
+		else{
+			if (typeof this.icecandidates[data.uid] == 'undefined' || typeof this.icecandidates[data.uid] != 'Array'){
+				this.icecandidates[data.uid] = [];
+			}
+			this.icecandidates[data.uid].push(data.candidate);
+		}
 	}
 }
 

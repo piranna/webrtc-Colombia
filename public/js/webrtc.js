@@ -70,7 +70,7 @@ let webRtcPeerOptions = {
 	*/
 }
 /**
-* It defines de callee user
+* It defines de callee user ID
 */
 let calleeId = '';
 
@@ -86,6 +86,9 @@ const wssMsgHandler = new WssCommingMessageHandler(mainSocket);
 
 
 
+/*
+	Websocket connection related event handlers
+*/
 
 wssMsgHandler.subscribeToEvents('connected',evcltWsOnConnectedHandler.onConnected);//Connected to websocket server
 wssMsgHandler.subscribeToEvents('joined',evCltWsJoinedToRoomHandler.onJoined);
@@ -96,6 +99,11 @@ wssMsgHandler.subscribeToEvents('all clients',(data)=>{
 	evClients.clients = data.clients;
 	evCltWsGetAllClientsHandler.onGetAllClients(evClients);
 });
+
+
+/*
+	WebRTC connection related event handlers
+*/
 wssMsgHandler.subscribeToEvents('rejectedcall',(data)=>{
 	evKurentoClient.onRejectedCall(data,(error,data)=>{
 		console.log(data);
@@ -115,7 +123,6 @@ wssMsgHandler.subscribeToEvents('incomingcall',(data)=>{
 		}
 	});
 });
-
 wssMsgHandler.subscribeToEvents('startcomunication',(data)=>{
 	evKurentoClient.onStartCommunication(data.sdpAnswer,(error)=>{
 		if (error){
@@ -126,8 +133,6 @@ wssMsgHandler.subscribeToEvents('startcomunication',(data)=>{
 		}
 	});
 });
-
-
 wssMsgHandler.subscribeToEvents('icecandidate',(data)=>{
 
 	evKurentoClient.onRemoteIceCandidate(data.candidate,(error)=>{
@@ -140,12 +145,15 @@ wssMsgHandler.subscribeToEvents('icecandidate',(data)=>{
 	});
 
 })
+
+
+
 /**
 * It instantiates an object to handle the prompt for nickname
 */
 const evNickSetter = new EvClientNickNameSetter();
-//let htmlConsole = document.querySelector(".console");
-//let clickHandler = ("ontouchstart" in window ? "touchend" : "click")
+
+
 /** 
 * It delegates any message coming from signaling server to
 * WssMessageHandler instance.
@@ -161,6 +169,13 @@ evKurentoClient.setSocket(mainSocket);//Add Socket to EvKurentoClient
 evKurentoClient.setCltIdentity(cltIdentity);//Add identity to EvKurentoClient
 evKurentoClient.setClientsList(evClients);
 
+
+
+/*
+
+	Code to run after document is ready
+
+*/
 $(document).ready(()=>{
 	/* 1. Asking user for a nickname */
 	 do{
@@ -180,55 +195,11 @@ $(document).ready(()=>{
 
 
 
-
-	/* 2. Toma los datos multimedia locales */
 	/*
-	const videoConstraints = {
-		video: true,
-		audio: true,
-	};
-	console.log("Taking local media streams...");
-	//console.log(navigator.mediaDevices);
-	navigator.mediaDevices.getUserMedia(videoConstraints)
-	.then((stream)=>{
-		localVideo = stream;
-		const videoObj = document.getElementById('vOwn');
-		videoObj.srcObject = stream;
-	})
-	.catch((err)=>{
-	  // handle the error
-	  console.log("Error loading local stream...");
-	  let errCont = document.getElementById("msgContainer");
-	  errCont.innerHTML = err;
-	});
-	*/
-
 	
-
-
-
-
-
-	/*
-	navigator.mediaDevices.getUserMedia(audioConstraints)
-	.then((stream)=>{
-
-		localAudio = stream;
-		const videoObj = document.getElementById('vOwn');
-		videoObj.srcObject = stream;
-		//console.log(stream);
-
-	})
-	.catch((err)=>{
-	  console.log("Error cargando el stream de datos...");
-	  let errCont = document.getElementById("msgContainer");
-	  errCont.innerHTML = err;
-	});
+		Buttons onclick handlers
+	
 	*/
-	/* It generates Peer-to-peer connection */
-	//peercon = new RTCPeerConnection();
-	//console.log("RTCPeerConnection...");
-	//console.log(peercon);
 	const btnStart = document.querySelector("button[class='controls__start']");
 	const btnCall = document.querySelector("button[class='controls__call']");
 	const btnStop = document.querySelector("button[class='controls__stop']");
@@ -237,11 +208,11 @@ $(document).ready(()=>{
 	btnStart.addEventListener("click",(e)=>{
 		evKurentoClient.startLocal(webRtcPeerOptions,(error,webRtcPeer)=>{
 			if (error){
-				console.log("- webrtc.js:235");
+				console.log("- webrtc.js:240");
 				console.log(error);
 			}
 			else{
-				console.log("- webrtc.js:239");
+				console.log("- webrtc.js:244");
 				console.log("Success creating WebRTCPeer object...");	
 				console.log(webRtcPeer);
 				
@@ -295,19 +266,15 @@ $(document).ready(()=>{
 		});
 	});
 
-
-
 	btnStop.addEventListener("click",(e)=>{
 		evKurentoClient.stopCall((response)=>{ console.log(response);});
 	});
-
-
-
-
 	
 });
 
-
+/*
+	Choosing users to call handler
+*/
 $(".users").on('click',".clientList__client",(e)=>{
 
 	$("ul.clientsList li").removeClass("clientList__client--selected");

@@ -42,7 +42,7 @@ const evClients = new EvClients();
 /**
 * It connects to websocket and webrtc signaling server.
 */
-const mainSocket = io('https://192.168.1.8:8443');
+const mainSocket = io('https://192.168.1.11:8443');
 /**
 *	It defines the identity object
 */
@@ -54,6 +54,20 @@ const cltIdentity = new EvClientIdentity();
 let webRtcPeerOptions = {
 	localVideo: document.getElementById('vOwn'),
 	remoteVideo: document.getElementById('vForeign'),
+	/*
+	mediaConstraints:{
+		audio : true,
+		video : true,
+	},
+    configuration : {
+           "iceServers": [{
+               'username': 'ejvturn',
+               'url': 'turn:turn100.sientifica.com:5349',
+               'credential': '7235bdM235'
+           }],
+           "iceTransportPolicy": "relay"  //stun wont be used
+	}
+	*/
 }
 /**
 * It defines de callee user
@@ -112,18 +126,26 @@ wssMsgHandler.subscribeToEvents('startcomunication',(data)=>{
 		}
 	});
 });
+
+
+wssMsgHandler.subscribeToEvents('icecandidate',(data)=>{
+
+	evKurentoClient.onRemoteIceCandidate(data.candidate,(error)=>{
+		if (error){
+			console.log("Failing adding remote ICE Candidate");
+		}
+		else{
+			console.log("Remote ICE Candidate added successfully");	
+		}
+	});
+
+})
 /**
 * It instantiates an object to handle the prompt for nickname
 */
 const evNickSetter = new EvClientNickNameSetter();
-let htmlConsole = document.querySelector(".console");
-let clickHandler = ("ontouchstart" in window ? "touchend" : "click")
-let localAudio, localVideo = {};
-let peercon = 1;
-
-
-let webRtcPeer = {};
-let sdpOffer = {};
+//let htmlConsole = document.querySelector(".console");
+//let clickHandler = ("ontouchstart" in window ? "touchend" : "click")
 /** 
 * It delegates any message coming from signaling server to
 * WssMessageHandler instance.
@@ -207,9 +229,6 @@ $(document).ready(()=>{
 	//peercon = new RTCPeerConnection();
 	//console.log("RTCPeerConnection...");
 	//console.log(peercon);
-
-
-	let options = {};
 	const btnStart = document.querySelector("button[class='controls__start']");
 	const btnCall = document.querySelector("button[class='controls__call']");
 	const btnStop = document.querySelector("button[class='controls__stop']");
@@ -218,11 +237,11 @@ $(document).ready(()=>{
 	btnStart.addEventListener("click",(e)=>{
 		evKurentoClient.startLocal(webRtcPeerOptions,(error,webRtcPeer)=>{
 			if (error){
-				console.log("- webrtc.js:143");
+				console.log("- webrtc.js:235");
 				console.log(error);
 			}
 			else{
-				console.log("- webrtc.js:148");
+				console.log("- webrtc.js:239");
 				console.log("Success creating WebRTCPeer object...");	
 				console.log(webRtcPeer);
 				
@@ -279,10 +298,8 @@ $(document).ready(()=>{
 
 
 	btnStop.addEventListener("click",(e)=>{
-		evKurentoClient.stopCall((response)=>{
-			console.log(response);
-		})
-	})
+		evKurentoClient.stopCall((response)=>{ console.log(response);});
+	});
 
 
 
@@ -290,19 +307,6 @@ $(document).ready(()=>{
 	
 });
 
-/* Maneja la vinculación al otro cliente */
-$("#btn-send").on(clickHandler,(e)=>{
-	e.preventDefault();
-	let remoteId = $(e.target).siblings("#jointo").val();
-	let msgObj = {
-		topic: 'connectto',
-		info: {
-			id: remoteId
-		}
-	}
-	console.log(msgObj);
-	mainSocket.emit("message",msgObj);
-});
 
 $(".users").on('click',".clientList__client",(e)=>{
 

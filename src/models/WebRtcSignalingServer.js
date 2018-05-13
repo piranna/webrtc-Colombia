@@ -158,7 +158,6 @@ class WebRtcSignalingServer{
 			type: 'incomingcall',
 			code: 200,
 			callerId: callerId,
-			sdpOffer: sdpOffer
 		}
 		this.wss.emmitMessageToSingleSocket ('message',msgObj,callee.socketid);
 
@@ -201,7 +200,6 @@ class WebRtcSignalingServer{
 					msgObj ={
 						type: 'startcomunication',
 						code: 200,
-						calleeId: callee.uid,
 						sdpAnswer: callerSdpAnswer
 					}
 					this.wss.emmitMessageToSingleSocket ('message',msgObj,caller.socketid);
@@ -209,7 +207,6 @@ class WebRtcSignalingServer{
 					msgObj ={
 						type: 'startcomunication',
 						code: 200,
-						callerId: caller.uid,
 						sdpAnswer: calleeSdpAnswer
 					}
 					this.wss.emmitMessageToSingleSocket ('message',msgObj,callee.socketid);
@@ -263,9 +260,11 @@ class WebRtcSignalingServer{
 	*/
 	onIceCandidate(data){
 		if (typeof this.pipelines[data.uid] != 'undefined' && typeof this.pipelines[data.uid]._WebRtcEndPoints[data.uid] != 'undefined'){
+			console.log(`Adding to WebRtcEndpoint a new ice candidate from ${data.uid}`);
 			this.pipelines[data.uid]._WebRtcEndPoints[data.uid].addIceCandidate(data.candidate);
 		}
 		else{
+			console.log(`Adding to candidates queue an ice candidate from ${data.uid}`);
 			if (typeof this.icecandidates[data.uid] == 'undefined' || typeof this.icecandidates[data.uid] != 'Array'){
 				this.icecandidates[data.uid] = [];
 			}

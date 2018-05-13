@@ -11,6 +11,11 @@ class EvKurentoPipeline1On1VideoRecording{
 		this.addIceCandidate = this.addIceCandidate.bind(this);
 		this.releaseCandidatesPool = this.releaseCandidatesPool.bind(this);
 		this.generateSdpAnswer = this.generateSdpAnswer.bind(this);
+		this.startPipeline = this.startPipeline.bind(this);
+		this.generateSdpAnswer = this.generateSdpAnswer.bind(this);
+		this.releasePipeline = this.releasePipeline.bind(this);
+		this.setIceCandidates = this.setIceCandidates.bind(this);
+		this.setSdpOffers = this.setSdpOffers.bind(this);
 	}
 	addIceCandidate(clientId,candidate){
 		if (typeof this._candidates[clientId] == 'undefined' || this._candidates[clientId] == null || this._candidates[clientId].constructor.name != 'Array'){
@@ -51,7 +56,9 @@ class EvKurentoPipeline1On1VideoRecording{
 					}
 				}
 				// Defines a event handler for OnIceCandidate
+				console.log("Creating Caller WebRtcEndpoint...");
 				callerWebRtcEndPoint.on("OnIceCandidate",(event)=>{
+					console.log("A new ICE Candidate for caller has arrived");
 					let candidate = this._evKurentoClient.kurentolib.getComplexType('IceCandidate')(event.candidate);
 					let msgObj = {
 						type: 'icecandidate',
@@ -68,6 +75,7 @@ class EvKurentoPipeline1On1VideoRecording{
 						callback(error);
 						return false;
 					}
+					console.log("Creating Callee WebRtcEndpoint...");
 					if (typeof this._candidates[callee.uid] != 'undefined' && typeof this._candidates[callee.uid] == 'Array'){
 						while(this._candidates[callee.uid].length){
 							let candidate = this._candidates[callee.uid].shift();
@@ -76,6 +84,7 @@ class EvKurentoPipeline1On1VideoRecording{
 					}
 					// Defines a event handler for OnIceCandidate
 					calleeWebRtcEndPoint.on("OnIceCandidate",(event)=>{
+						console.log("A new ICE Candidate for callee has arrived");
 						let candidate = this._evKurentoClient.kurentolib.getComplexType('IceCandidate')(event.candidate);
 						let msgObj = {
 							type: 'icecandidate',
@@ -129,16 +138,23 @@ class EvKurentoPipeline1On1VideoRecording{
 
 	generateSdpAnswer(uid,callback){
 		this._WebRtcEndPoints[uid].processOffer(this._sdpOffers[uid],(error,sdpAnswer)=>{
-			console.log("sdpAnswer...");
-			callback(error,sdpAnswer);
+			console.log(`Generating sdpAnswer for ... ${uid}` );
+			
+			if (error){
+				console.log(error);
+				callback(error,sdpAnswer);
+				return false;
+			}
+	    	callback (null,sdpAnswer);
 		});
-    	this._WebRtcEndPoints[uid].gatherCandidates((error)=>{
-    		console.log("GatherCandidates...");
+		this._WebRtcEndPoints[uid].gatherCandidates((error)=>{
+			console.log(`GatherCandidates for ${uid}...`);
 	        if (error) {
+	        	console.log(`Error gathering ICE Candidates for ${uid}`)
 	        	console.log(error);
-	            return callback(error);
 	        }
-    	});
+		});
+    	
 
 	}
 }

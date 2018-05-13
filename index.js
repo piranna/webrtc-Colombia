@@ -14,10 +14,7 @@ let EvKurentoClientRegistry = require('./src/models/EvKurentoClientRegistry');
 
 /* Getting params from command line */
 let argv = minimist(process.argv.slice(2), {
-  default: {
-      as_uri: "https://kms2.sientifica.com:8443/",
-      ws_uri: "wss://kms2.sientifica.com:8433/kurento"
-  }
+  default: {}
 });
 
 /* Params to start servers */

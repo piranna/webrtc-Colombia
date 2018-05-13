@@ -16,6 +16,7 @@ const evKurentoClient = ((kurentoUtils)=>{
 
 	function _OnIceCandidate (candidate){
 
+		/*
 		if (navigator.mozGetUserMedia) {
 			console.log("--Firefox");
 		}
@@ -28,6 +29,9 @@ const evKurentoClient = ((kurentoUtils)=>{
   		else{
   			console.log('--Safari');
   		}
+		console.log(candidate);
+		*/
+		console.log(`A new local ICE Candidate created ${candidate}`);
 		console.log(candidate);
 		let msgObj = {
 			topic: 'icecandidate',
@@ -47,8 +51,10 @@ const evKurentoClient = ((kurentoUtils)=>{
 				console.log(error);
 				callback(error);
 			}
-			else
+			else{
+				console.log("Success processing sdpAnswer... Starting communication");
 				callback(null);
+			}
 		});
 
 	}
@@ -67,7 +73,7 @@ const evKurentoClient = ((kurentoUtils)=>{
 					return false;
 				}
 				_sdpOffer = offerSdp;
-				console.log(offerSdp);
+				//console.log(offerSdp);
 				__callback(null,offerSdp);
 				return offerSdp;
 			});
@@ -261,6 +267,16 @@ const evKurentoClient = ((kurentoUtils)=>{
 						return false;
 					}
 					callback(null);
+			});
+		},
+		onRemoteIceCandidate:(candidate,callback)=>{
+			_webRtcPeer.addIceCandidate(candidate,(error)=>{
+				if (error){
+					callback(error);
+				}
+				else{
+					callback(null);
+				}
 			});
 		},
 

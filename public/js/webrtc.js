@@ -42,7 +42,7 @@ const evClients = new EvClients();
 /**
 * It connects to websocket and webrtc signaling server.
 */
-const mainSocket = io('https://192.168.1.11:8443');
+const mainSocket = io('https://192.168.1.6:8443');
 /**
 *	It defines the identity object
 */

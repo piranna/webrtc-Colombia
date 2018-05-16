@@ -137,25 +137,16 @@ class EvKurentoPipeline1On1VideoRecording{
 	}
 
 	generateSdpAnswer(uid,callback){
-		this._WebRtcEndPoints[uid].processOffer(this._sdpOffers[uid],(error,sdpAnswer)=>{
-			console.log(`Generating sdpAnswer for ... ${uid}` );
-			
-			if (error){
-				console.log(error);
-				callback(error,sdpAnswer);
-				return false;
-			}
-	    	callback (null,sdpAnswer);
-		});
-		this._WebRtcEndPoints[uid].gatherCandidates((error)=>{
+		this._WebRtcEndPoints[uid].processOffer(this._sdpOffers[uid],callback);
+		this._WebRtcEndPoints[uid].gatherCandidates((_error)=>{
 			console.log(`GatherCandidates for ${uid}...`);
-	        if (error) {
+	        if (_error) {
 	        	console.log(`Error gathering ICE Candidates for ${uid}`)
-	        	console.log(error);
+	        	console.log(_error);
+	        	return callback (_error);
 	        }
+	        
 		});
-    	
-
 	}
 }
 module.exports = exports = EvKurentoPipeline1On1VideoRecording;

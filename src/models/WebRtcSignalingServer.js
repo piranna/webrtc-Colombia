@@ -187,12 +187,18 @@ class WebRtcSignalingServer{
 			pl.generateSdpAnswer(caller.uid,(error,callerSdpAnswer)=>{
 				if (error){
 
+					console.log("Error creating sdpAnswer for caller...");
+					console.log(error);
+					return error;
 				}
 				console.log("callerSdpAnswer");
 				console.log(callerSdpAnswer);
 				pl.generateSdpAnswer(callee.uid,(error,calleeSdpAnswer)=>{
 					if(error){
 
+						console.log("Error creating sdpAnswer for callee...");
+						console.log(error);
+						return error;
 					}
 					console.log("calleeSdpAnswer");
 					console.log(calleeSdpAnswer);

@@ -18,6 +18,7 @@ class EvKurentoPipeline1On1VideoRecording{
 		this.setSdpOffers = this.setSdpOffers.bind(this);
 	}
 	addIceCandidate(clientId,candidate){
+		console.log('in addIceCandidate of pipeline file');
 		if (typeof this._candidates[clientId] == 'undefined' || this._candidates[clientId] == null || this._candidates[clientId].constructor.name != 'Array'){
 			_candidates[clientId] = [];
 		}
@@ -49,8 +50,10 @@ class EvKurentoPipeline1On1VideoRecording{
 					return false;
 				}
 				// Gets the icecandidates already saved
-				if (typeof this._candidates[caller.uid] != 'undefined' && typeof this._candidates[caller.uid] == 'Array'){
-					while(this._candidates[caller.uid].length){
+				//if (typeof this._candidates[caller.uid] != 'undefined' && typeof this._candidates[caller.uid] == 'Array'){
+				if (this._candidates[caller.uid]){	
+					while(this._candidates[caller.uid].length > 0){
+						console.log('in while loop adding candidates for ' + caller.uid);
 						let candidate = this._candidates[caller.uid].shift();
 						callerWebRtcEndPoint.addIceCandidate(candidate);
 					}
@@ -58,7 +61,9 @@ class EvKurentoPipeline1On1VideoRecording{
 				// Defines a event handler for OnIceCandidate
 				console.log("Creating Caller WebRtcEndpoint...");
 				callerWebRtcEndPoint.on("OnIceCandidate",(event)=>{
-					console.log("A new ICE Candidate for caller has arrived");
+					console.log(`A new ICE Candidate for caller has arrived, sending it out to ${caller.uid}`);
+					console.log(event.candidate);
+					console.log("--------------");
 					let candidate = this._evKurentoClient.kurentolib.getComplexType('IceCandidate')(event.candidate);
 					let msgObj = {
 						type: 'icecandidate',
@@ -76,15 +81,19 @@ class EvKurentoPipeline1On1VideoRecording{
 						return false;
 					}
 					console.log("Creating Callee WebRtcEndpoint...");
-					if (typeof this._candidates[callee.uid] != 'undefined' && typeof this._candidates[callee.uid] == 'Array'){
-						while(this._candidates[callee.uid].length){
+					//if (typeof this._candidates[callee.uid] != 'undefined' && typeof this._candidates[callee.uid] == 'Array'){
+					if (this._candidates[callee.uid]){	
+						while(this._candidates[callee.uid].length > 0){
 							let candidate = this._candidates[callee.uid].shift();
+							console.log('in while loop adding candidates for ' + callee.uid);
 							calleeWebRtcEndPoint.addIceCandidate(candidate);
 						}
 					}
 					// Defines a event handler for OnIceCandidate
 					calleeWebRtcEndPoint.on("OnIceCandidate",(event)=>{
-						console.log("A new ICE Candidate for callee has arrived");
+						console.log(`A new ICE Candidate for callee has arrived, sending it out to ${callee.uid}`);
+						console.log(event.candidate);
+						console.log("--------------");
 						let candidate = this._evKurentoClient.kurentolib.getComplexType('IceCandidate')(event.candidate);
 						let msgObj = {
 							type: 'icecandidate',
@@ -137,16 +146,32 @@ class EvKurentoPipeline1On1VideoRecording{
 	}
 
 	generateSdpAnswer(uid,callback){
-		this._WebRtcEndPoints[uid].processOffer(this._sdpOffers[uid],callback);
-		this._WebRtcEndPoints[uid].gatherCandidates((_error)=>{
-			console.log(`GatherCandidates for ${uid}...`);
-	        if (_error) {
-	        	console.log(`Error gathering ICE Candidates for ${uid}`)
-	        	console.log(_error);
-	        	return callback (_error);
-	        }
-	        
+		this._WebRtcEndPoints[uid].processOffer(this._sdpOffers[uid],(error,sdpAnswer)=>{
+			console.log(`Generating sdpAnswer for ... ${uid}` );
+			
+			if (error){
+				console.log(error);
+				callback(error,sdpAnswer);
+				return false;
+			}
+			callback (null,sdpAnswer);
+			// this._WebRtcEndPoints[uid].gatherCandidates((error)=>{
+			// 	console.log(`GatherCandidates for ${uid}...`);
+			// 	if (error) {
+			// 		console.log(`Error gathering ICE Candidates for ${uid}`)
+			// 		console.log(error);
+			// 	}
+			// });
 		});
+		this._WebRtcEndPoints[uid].gatherCandidates((error)=>{
+			console.log(`GatherCandidates for ${uid}...`);
+	        if (error) {
+	        	console.log(`Error gathering ICE Candidates for ${uid}`)
+	        	console.log(error);
+	        }
+		});
+
+		
 	}
 }
 module.exports = exports = EvKurentoPipeline1On1VideoRecording;

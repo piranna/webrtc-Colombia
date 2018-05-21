@@ -54,7 +54,7 @@ const cltIdentity = new EvClientIdentity();
 let webRtcPeerOptions = {
 	localVideo: document.getElementById('vOwn'),
 	remoteVideo: document.getElementById('vForeign'),
-	/*
+		
 	mediaConstraints:{
 		audio : true,
 		video : true,
@@ -67,7 +67,7 @@ let webRtcPeerOptions = {
            }],
            "iceTransportPolicy": "relay"  //stun wont be used
 	}
-	*/
+	
 }
 /**
 * It defines de callee user ID

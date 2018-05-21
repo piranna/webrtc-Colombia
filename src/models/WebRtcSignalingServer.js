@@ -153,7 +153,7 @@ class WebRtcSignalingServer{
 		/*
 		*
 		*/
-		console.log(`Sending call request to callee ${callee.socketid}`);
+		console.log(`Sending call request to callee ${callee.uid}`);
 		let msgObj ={
 			type: 'incomingcall',
 			code: 200,

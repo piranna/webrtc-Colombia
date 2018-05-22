@@ -2,7 +2,8 @@
   "name": "webrtc",
   "version": "1.0.0",
   "description": "WebRTC",
-  "main": "index.js",
+  "main": "src",
+  "bin": "server.js",
   "dependencies": {
     "PubSub": "^3.4.0",
     "kurento-client": "https://github.com/Kurento/kurento-client-js/tarball/master",

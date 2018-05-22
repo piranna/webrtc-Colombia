@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'strict mode'
 /* Requiring/Importing dependencies */
 let minimist = require('minimist');
@@ -25,7 +26,7 @@ let kurentoClt = null;
 let mediaPipeLine = null;
 
 
-/** 
+/**
   Starting http server
 
 */
@@ -37,7 +38,7 @@ if(process.argv[2] && typeof process.argv[2] === 'string'){
       const options = {
         key:config.certs.key,
         cert:config.certs.cert
-      } 
+      }
       httpserver = new WebSecureServer(pathToPublic,port,options);
       break;
 
@@ -46,7 +47,7 @@ if(process.argv[2] && typeof process.argv[2] === 'string'){
       httpserver = new WebServer(pathToPublic,port);
       break;
     default:{
-      console.error("No se ha definido un metodo para arrancar el servidor web","Error");   
+      console.error("No se ha definido un metodo para arrancar el servidor web","Error");
       return "";
     }
   }
@@ -85,10 +86,10 @@ EvKurentoClient.getKurentoClt((error,kc)=>{
 let webRtcSignalingSrv = new WebRtcSignalingServer(wsServer,EvKurentoClient,new EvKurentoClientRegistry());
 
 /**
-  ESP: 
-  Viculando el administrador de eventos de WebRTC al servidor de sockets mediante el patrón Pub/Sub 
+  ESP:
+  Viculando el administrador de eventos de WebRTC al servidor de sockets mediante el patrón Pub/Sub
 
-  ENG: 
+  ENG:
   Linking webrtc events handler (signaling) with websocket server, using Pub/Sub pattern.
 */
 
@@ -115,4 +116,3 @@ wsServer.subscribeToEvents('callResponse',webRtcSignalingSrv.responseCall);
 wsServer.subscribeToEvents('rejectedCall',webRtcSignalingSrv.rejectedCall);
 wsServer.subscribeToEvents('hangout',webRtcSignalingSrv.hangOut);
 wsServer.subscribeToEvents('icecandidate',webRtcSignalingSrv.onIceCandidate);
-

@@ -152,8 +152,6 @@ wssMsgHandler.subscribeToEvents('icecandidate',(data)=>{
 * It instantiates an object to handle the prompt for nickname
 */
 const evNickSetter = new EvClientNickNameSetter();
-
-
 /** 
 * It delegates any message coming from signaling server to
 * WssMessageHandler instance.
@@ -161,16 +159,12 @@ const evNickSetter = new EvClientNickNameSetter();
 mainSocket.on("message",(data)=>{
 	wssMsgHandler.onMesage(data);
 })
-
 /**
 * Set some elements of the EvKurentoClient module
 */
 evKurentoClient.setSocket(mainSocket);//Add Socket to EvKurentoClient
 evKurentoClient.setCltIdentity(cltIdentity);//Add identity to EvKurentoClient
 evKurentoClient.setClientsList(evClients);
-
-
-
 /*
 
 	Code to run after document is ready
@@ -190,10 +184,6 @@ $(document).ready(()=>{
 	});
 
 	cltCallStatus.setStatus('READY');
-
-
-
-
 
 	/*
 	

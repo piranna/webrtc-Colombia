@@ -11,6 +11,16 @@
         <link rel="apple-touch-icon" href="icon.png">
         <!-- Place favicon.ico in the root directory -->
 
+        <!-- Modules loaded by bower, this are KURENTO CLIENT libraries -->
+        <script src="bower_components/adapter.js/adapter.js"></script>
+        <script src="bower_components/kurento-client/js/kurento-client.js"></script>
+        <script src="bower_components/kurento-utils/js/kurento-utils.js"></script>
+        <!-- END KURENTO CLIENT libraries -->
+    
+        <script>
+            let globDebug_EvKurentoClient = {};
+        </script>
+
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
     </head>
@@ -20,26 +30,34 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-
         <header>
-            <h1>Test WebRTC (No Kurento)</h1>
+            EV WebRTC video-conf service
         </header>
+        <section class="users">
+            No users connected
+        </section>
+        <section class="controls">
+            <button data-type="start" class="controls__start">Start</button>
+            <button data-type="call" class="controls__call">Call</button>
+            <button data-type="stop" class="controls__stop">Stop</button>
+        </section>
         <section class="displays">
             <div class="display" id="own">
-                <video id="vOwn" width="320" height="240" autoplay></video>
+                <video id="vOwn" autoplay></video>
             </div>
             <div class="display" id="foreign">
-                <video id="vForeign" width="320" height="240" autoplay></video>
+                <video id="vForeign" autoplay></video>
             </div>
 
         </section>
         <footer>
-            <div class="msgContainer" id="msgContainer">...</div>
+            <div class="console"></div>
         </footer>
+        <script src="jspm_packages/system.js"></script>
+        <script src="config.js"></script>
+        <script>
+        System.import('js/index.js');
+        </script>
+		<!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     </body>
-	<script src="jspm_packages/system.js"></script>
-	<script src="config.js"></script>
-	<script>
-	System.import('js/main.js');
-	</script>
 </html>

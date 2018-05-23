@@ -24,7 +24,6 @@ class EvKurentoPipeline1On1VideoRecording{
 	}
 
 	startPipeline = (caller,callee,callback) => {
-		let msg = {};
 		this._evKurentoClient.createPipeline((error,pl)=>{
 			if(error){
 				console.log(error);
@@ -62,7 +61,7 @@ class EvKurentoPipeline1On1VideoRecording{
 						type: 'icecandidate',
 						code: 200,
 						msg: error,
-						candidate:candidate
+						candidate
 					}
 					this._wss.emmitMessageToSingleSocket ('message',msgObj,caller.socketid);
 				});
@@ -93,7 +92,7 @@ class EvKurentoPipeline1On1VideoRecording{
 							type: 'icecandidate',
 							code: 200,
 							msg: error,
-							candidate:candidate
+							candidate
 						}
 						this._wss.emmitMessageToSingleSocket ('message',msgObj,callee.socketid);
 					});
@@ -110,13 +109,13 @@ class EvKurentoPipeline1On1VideoRecording{
                 pl.release();
                 return callback(error);
               }
+
+	            this._pipeline = pl;
+	            this._WebRtcEndPoints[callee.uid] = calleeWebRtcEndPoint;
+	            this._WebRtcEndPoints[caller.uid] = callerWebRtcEndPoint;
+
+	            callback(null,this);
             });
-
-            this._pipeline = pl;
-            this._WebRtcEndPoints[callee.uid] = calleeWebRtcEndPoint;
-            this._WebRtcEndPoints[caller.uid] = callerWebRtcEndPoint;
-
-            callback(null,this);
           });
 				});
 			});

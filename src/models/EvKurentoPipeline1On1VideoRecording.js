@@ -1,3 +1,7 @@
+const RECORDING_PATH = "file:///tmp/"
+const RECORDING_EXT = ".ogg"
+
+
 class EvKurentoPipeline1On1VideoRecording{
 	_pipeline;
 	_candidates = {};
@@ -97,26 +101,59 @@ class EvKurentoPipeline1On1VideoRecording{
 						this._wss.emmitMessageToSingleSocket ('message',msgObj,callee.socketid);
 					});
 
-					//Connects the endpoints
-					callerWebRtcEndPoint.connect(calleeWebRtcEndPoint,(error)=>{
-            if (error) {
-              pl.release();
-              return callback(error);
-            }
+					pl.create("RecorderEndpoint", `${RECORDING_PATH}caller${RECORDING_EXT}`,
+					(error, callerRecorder)=>{
+						if (error){
+							console.log(error);
+							return callback(error);
+						}
 
-            calleeWebRtcEndPoint.connect(callerWebRtcEndPoint,(error)=>{
-              if (error) {
-                pl.release();
-                return callback(error);
-              }
+						pl.create("RecorderEndpoint",  `${RECORDING_PATH}callee${RECORDING_EXT}`,
+						(error, calleeRecorder)=>{
+							if (error){
+								console.log(error);
+								return callback(error);
+							}
 
-	            this._pipeline = pl;
-	            this._WebRtcEndPoints[callee.uid] = calleeWebRtcEndPoint;
-	            this._WebRtcEndPoints[caller.uid] = callerWebRtcEndPoint;
+							//Connects the endpoints
+							callerWebRtcEndPoint.connect(calleeWebRtcEndPoint,(error)=>{
+								if (error) {
+									pl.release();
+									return callback(error);
+								}
 
-	            callback(null,this);
-            });
-          });
+								callerWebRtcEndPoint.connect(callerRecorder, "AUDIO", (error)=>{
+									if (error) {
+										pl.release();
+										return callback(error);
+									}
+
+									calleeWebRtcEndPoint.connect(callerWebRtcEndPoint,(error)=>{
+										if (error) {
+											pl.release();
+											return callback(error);
+										}
+
+										calleeWebRtcEndPoint.connect(calleeRecorder, "AUDIO", (error)=>{
+											if (error) {
+												pl.release();
+												return callback(error);
+											}
+
+											callerRecorder.record();
+											calleeRecorder.record();
+
+											this._pipeline = pl;
+											this._WebRtcEndPoints[callee.uid] = calleeWebRtcEndPoint;
+											this._WebRtcEndPoints[caller.uid] = callerWebRtcEndPoint;
+
+											callback(null,this);
+										});
+									});
+								});
+							});
+						})
+					})
 				});
 			});
 		});

@@ -113,6 +113,6 @@ wsServer.subscribeToEvents('disconnect',webRtcSignalingSrv.disconnectSocket);
 wsServer.subscribeToEvents('call',webRtcSignalingSrv.call);
 wsServer.subscribeToEvents('callResponse',webRtcSignalingSrv.responseCall);
 wsServer.subscribeToEvents('rejectedCall',webRtcSignalingSrv.rejectedCall);
-wsServer.subscribeToEvents('hangout',webRtcSignalingSrv.hangOut);
+wsServer.subscribeToEvents('hangup',webRtcSignalingSrv.hangUp);
 wsServer.subscribeToEvents('icecandidate',webRtcSignalingSrv.onIceCandidate);
 

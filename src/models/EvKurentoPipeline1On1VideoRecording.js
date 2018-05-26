@@ -15,7 +15,9 @@ class EvKurentoPipeline1On1VideoRecording{
 		this._candidates = {};
 		this._sdpOffers = {};
 		this._WebRtcEndPoints = {};
-		this._recorders = {};
+		this._recorder = {};
+		this.caller = {};
+		this.callee = {};
 
 
 		this.addIceCandidate = this.addIceCandidate.bind(this);
@@ -26,6 +28,21 @@ class EvKurentoPipeline1On1VideoRecording{
 		this.releasePipeline = this.releasePipeline.bind(this);
 		this.generateSdpAnswer = this.generateSdpAnswer.bind(this);
 
+	}
+
+	setCaller(caller){
+		this.caller = caller;
+	}
+
+	setCallee(callee){
+		this.callee = callee;
+	}
+
+	getUsers(){
+		return {
+			caller: this.caller,
+			callee: this.callee
+		}
 	}
 
 	addIceCandidate (clientId,candidate){
@@ -42,7 +59,10 @@ class EvKurentoPipeline1On1VideoRecording{
 		return true;
 	}
 
-	startPipeline (caller,callee,callback){
+	startPipeline (callback){
+		let caller = this.caller;
+		let callee = this.callee;
+
 		this._evKurentoClient.createPipeline((error,pl)=>{
 			if(error){
 				console.log(error);
@@ -142,7 +162,9 @@ class EvKurentoPipeline1On1VideoRecording{
 
 
 								//Creating a RecorderEndpoint to record mixed audio/video from caller and callee
-								pl.create("RecorderEndpoint",{uri:`${RECORDING_PATH}caller${RECORDING_EXT}`},(error,recorder)=>{
+								//pl.create("RecorderEndpoint",{uri:`${RECORDING_PATH}caller${RECORDING_EXT}`},(error,recorder)=>{
+								let fileName = `${Date.now()}-${this.caller.uid}-${this.callee.uid}`;
+								pl.create("RecorderEndpoint",{uri:`${RECORDING_PATH}${fileName}${RECORDING_EXT}`},(error,recorder)=>{									
 									if (error) {
 										pl.release();
 										return callback(error);
@@ -181,8 +203,7 @@ class EvKurentoPipeline1On1VideoRecording{
 															this._pipeline = pl;
 															this._WebRtcEndPoints[callee.uid] = calleeWebRtcEndPoint;
 															this._WebRtcEndPoints[caller.uid] = callerWebRtcEndPoint;
-															this._recorders[caller.uid] = recorder;
-															this._recorders[callee.uid] = recorder;
+															this._recorder = recorder;
 															callback(null,this);
 														});
 													});
@@ -269,11 +290,13 @@ class EvKurentoPipeline1On1VideoRecording{
 	//=====================================================
 
 	releasePipeline(){
+
+		this._recorder.stopAndWait();
 		if (this._pipeline){
 			this._pipeline.release();
 		}
 
-		delete this._pipeline;
+		this._pipeline = {};
 		return true;
 	}
 

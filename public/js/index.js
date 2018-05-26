@@ -147,6 +147,12 @@ wssMsgHandler.subscribeToEvents('icecandidate',(data)=>{
 
 })
 
+wssMsgHandler.subscribeToEvents('hangup',(data)=>{
+
+	evKurentoClient.stopCall((response)=>{ console.log(response);});
+
+})
+
 
 
 /**
@@ -259,6 +265,13 @@ $(document).ready(()=>{
 
 	btnStop.addEventListener("click",(e)=>{
 		evKurentoClient.stopCall((response)=>{ console.log(response);});
+		let msgObj = {
+			topic: 'hangup',
+			info: {
+				uid: cltIdentity.uid
+			}
+		}
+		mainSocket.emit("message",msgObj)
 	});
 	
 });

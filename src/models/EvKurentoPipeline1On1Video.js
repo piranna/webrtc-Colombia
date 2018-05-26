@@ -7,6 +7,8 @@ class EvKurentoPipeline1On1Video{
 		this._evKurentoClient = evKurentoClient;
 		this._wss = wss;
 		this._WebRtcEndPoints = {};
+		this.caller = {};
+		this.callee = {};		
 
 		this.addIceCandidate = this.addIceCandidate.bind(this);
 		this.releaseCandidatesPool = this.releaseCandidatesPool.bind(this);
@@ -16,6 +18,19 @@ class EvKurentoPipeline1On1Video{
 		this.releasePipeline = this.releasePipeline.bind(this);
 		this.setIceCandidates = this.setIceCandidates.bind(this);
 		this.setSdpOffers = this.setSdpOffers.bind(this);
+	}
+
+	setCaller(caller){
+		this.caller = caller;
+	}
+	setCallee(callee){
+		this.callee = callee;
+	}
+	getUsers(){
+		return {
+			caller: this.caller,
+			callee: this.callee
+		}
 	}
 	addIceCandidate(clientId,candidate){
 		console.log('in addIceCandidate of pipeline file');
@@ -31,8 +46,10 @@ class EvKurentoPipeline1On1Video{
 		delete this._candidates[clientId];
 		return true;
 	}
-	startPipeline(caller,callee,callback){
+	startPipeline(callback){
 		let msg = {};
+		let caller = this.caller;
+		let callee = this.callee;
 		this._evKurentoClient.createPipeline((error,pl)=>{
 			if(error){
 				console.log(error);

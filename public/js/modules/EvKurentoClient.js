@@ -98,7 +98,7 @@ const evKurentoClient = ((kurentoUtils)=>{
 
 		console.log("Releasing webrtc components");
 		_webRtcPeer.dispose();
-		_webRtcPeer,_sdpOffer = null;
+		_webRtcPeer,_sdpOffer = {};
 		_clientCallStatus.setStatus("READY");
 		callback({error:false,msg:`Webrtc components released`});
 

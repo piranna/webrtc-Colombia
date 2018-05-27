@@ -3,17 +3,44 @@ const RECORDING_EXT = ".ogg"
 
 
 class EvKurentoPipeline1On1VideoRecording{
-	_pipeline;
-	_candidates = {};
-	_sdpOffers = {};
-	_WebRtcEndPoints = {};
-
 	constructor(evKurentoClient,wss){
 		this._evKurentoClient = evKurentoClient;
 		this._wss = wss;
+		this._pipeline = {};
+		this._candidates = {};
+		this._sdpOffers = {};
+		this._WebRtcEndPoints = {};
+		this._recorder = {};
+		this.caller = {};
+		this.callee = {};
+
+
+		this.addIceCandidate = this.addIceCandidate.bind(this);
+		this.releaseCandidatesPool = this.releaseCandidatesPool.bind(this);
+		this.startPipeline = this.startPipeline.bind(this);
+		this.setSdpOffers = this.setSdpOffers.bind(this);
+		this.setIceCandidates = this.setIceCandidates.bind(this);
+		this.releasePipeline = this.releasePipeline.bind(this);
+		this.generateSdpAnswer = this.generateSdpAnswer.bind(this);
+
 	}
 
-	addIceCandidate = (clientId,candidate) => {
+	setCaller(caller){
+		this.caller = caller;
+	}
+
+	setCallee(callee){
+		this.callee = callee;
+	}
+
+	getUsers(){
+		return {
+			caller: this.caller,
+			callee: this.callee
+		}
+	}
+
+	addIceCandidate (clientId,candidate){
 		console.log('in addIceCandidate of pipeline file');
 		if (!Array.isArray(this._candidates[clientId])){
 			_candidates[clientId] = [];
@@ -22,12 +49,15 @@ class EvKurentoPipeline1On1VideoRecording{
 		return true;
 	}
 
-	releaseCandidatesPool = (clientId) => {
+	releaseCandidatesPool(clientId){
 		delete this._candidates[clientId];
 		return true;
 	}
 
-	startPipeline = (caller,callee,callback) => {
+	startPipeline (callback){
+		let caller = this.caller;
+		let callee = this.callee;
+
 		this._evKurentoClient.createPipeline((error,pl)=>{
 			if(error){
 				console.log(error);
@@ -101,8 +131,94 @@ class EvKurentoPipeline1On1VideoRecording{
 						this._wss.emmitMessageToSingleSocket ('message',msgObj,callee.socketid);
 					});
 
-					pl.create("RecorderEndpoint", `${RECORDING_PATH}caller${RECORDING_EXT}`,
-					(error, callerRecorder)=>{
+
+					//Creating composite hub
+					pl.create("Composite",(error,composite)=>{
+
+						if (error) {
+							pl.release();
+							return callback(error);
+						}
+
+						//Creating a HubPort for Caller Stream
+						composite.createHubPort((error,callerHubPort)=>{
+
+							if (error) {
+								pl.release();
+								return callback(error);
+							}
+
+							//Creating a HubPort for Callee Stream
+							composite.createHubPort((error,calleeHubPort)=>{
+
+								if (error) {
+									pl.release();
+									return callback(error);
+								}
+
+
+								//Creating a RecorderEndpoint to record mixed audio/video from caller and callee
+								//pl.create("RecorderEndpoint",{uri:`${RECORDING_PATH}caller${RECORDING_EXT}`},(error,recorder)=>{
+								let fileName = `${Date.now()}-${this.caller.uid}-${this.callee.uid}`;
+								pl.create("RecorderEndpoint",{uri:`${RECORDING_PATH}${fileName}${RECORDING_EXT}`},(error,recorder)=>{
+									if (error) {
+										pl.release();
+										return callback(error);
+									}
+
+									//Creating a HubPort for RecorderEnpoint
+									composite.createHubPort((error,recorderHubPort)=>{
+
+										//It connects callerWebRtcEndpoint to calleeWebRtcEndpoint
+										callerWebRtcEndPoint.connect(calleeWebRtcEndPoint,(error)=>{
+											if (error) {
+												pl.release();
+												return callback(error);
+											}
+
+											//It connects callerWebRtcEndpoint to its hubport
+											callerWebRtcEndPoint.connect(callerHubPort,(error)=>{
+
+												if (error){
+													pl.release();
+													return callback(error);
+												}
+
+												//It connects calleeWebRtcEndpoint to callerWebRtcEndpoint
+												calleeWebRtcEndPoint.connect(callerWebRtcEndPoint,(error)=>{
+													if (error) {
+														pl.release();
+														return callback(error);
+													}
+													//It connects calleeWebRtcEndpoint to its hubport
+													calleeWebRtcEndPoint.connect(calleeHubPort,(error)=>{
+
+														//It connects recorderHubPort output to recorderEndpoint to record the video
+														recorderHubPort.connect(recorder,(error)=>{
+															recorder.record();
+															this._pipeline = pl;
+															this._WebRtcEndPoints[callee.uid] = calleeWebRtcEndPoint;
+															this._WebRtcEndPoints[caller.uid] = callerWebRtcEndPoint;
+															this._recorder = recorder;
+															callback(null,this);
+														});
+													});
+												});
+											})
+
+										});
+
+									})
+								})
+							});
+
+						})
+					});
+
+
+
+					/*
+					pl.create("RecorderEndpoint", `${RECORDING_PATH}caller${RECORDING_EXT}`,(error, callerRecorder)=>{
 						if (error){
 							console.log(error);
 							return callback(error);
@@ -164,17 +280,19 @@ class EvKurentoPipeline1On1VideoRecording{
 		this._sdpOffers = sdpOffers;
 	}
 
-	setIceCandidates = (iceCandidates) => {
+	setIceCandidates(iceCandidates){
 		this._candidates = iceCandidates;
 	}
 	//=====================================================
 
-	releasePipeline = () => {
+	releasePipeline(){
+
+		this._recorder.stopAndWait();
 		if (this._pipeline){
 			this._pipeline.release();
 		}
 
-		delete this._pipeline;
+		this._pipeline = {};
 		return true;
 	}
 

@@ -23,7 +23,7 @@ class WebRtcSignalingServer{
 		this.getAllConnectedUsers = this.getAllConnectedUsers.bind(this);
 		this.call = this.call.bind(this);
 		this.responseCall = this.responseCall.bind(this);
-		this.hangOut = this.hangOut.bind(this);
+		this.hangUp = this.hangUp.bind(this);
 		this.disconnectSocket = this.disconnectSocket.bind(this);
 		this.rejectedCall = this.rejectedCall.bind(this);
 		this.onIceCandidate = this.onIceCandidate.bind(this);
@@ -85,10 +85,12 @@ class WebRtcSignalingServer{
 	*/
 	disconnectSocket(data){
 
+		/* It gets the user related to disconnected socket */
+		let userToDel = this.cltRegistry.getClientBySocketId(data.socketid);
+		/* If the related user is in an ongoing call it stops de communication */
+		this.releasePl(userToDel);
 		/* Deletes from clients registry */
-		let cltToDel = this.cltRegistry.getClientBySocketId(data.socketid);
-		this.cltRegistry.deleteClient(cltToDel);
-
+		this.cltRegistry.deleteClient(userToDel);
 		/* Notifies to other connected sockets the updated list of clients connected */
 		let msgObj ={
 			type: 'all clients',
@@ -99,6 +101,50 @@ class WebRtcSignalingServer{
 		console.log(msgObj)
 		this.wss.emmitMessageToSockets ('message',msgObj);
 
+
+	}
+
+
+	releasePl(userToDel){
+
+		console.log(userToDel);
+		console.log("WebRtcSiganlingServer:111");
+		if (this.pipelines[userToDel.uid] && typeof this.pipelines[userToDel.uid] != 'undefined'){
+			this.pipelines[userToDel.uid].releasePipeline();
+			let users = this.pipelines[userToDel.uid].getUsers();
+			//It cleans sdpOffers and icecandidates already saved
+			Reflect.deleteProperty(this.sdpOffers,users.caller.uid);
+			delete this.sdpOffers[users.caller.uid];
+			Reflect.deleteProperty(this.icecandidates,users.caller.uid);
+			delete this.icecandidates[users.caller.uid];
+			Reflect.deleteProperty(this.sdpOffers,users.callee.uid);
+			delete this.sdpOffers[users.callee.uid];
+			Reflect.deleteProperty(this.icecandidates,users.callee.uid);
+			delete this.icecandidates[users.callee.uid];
+			//It cleans MediaPipeline
+			Reflect.deleteProperty(this.pipelines,users.caller.uid);
+			delete this.pipelines[users.caller.uid];
+			Reflect.deleteProperty(this.pipelines,users.callee.uid);
+			delete this.pipelines[users.callee.uid];
+
+			/*
+				Sends message to another client
+			*/
+			let msgObj ={
+				type: 'hangup',
+				code: 200,
+			}
+			//console.log(this.wss.socketServer.sockets);
+			console.log(msgObj)
+			this.wss.emmitMessageToSockets ('message',msgObj);
+			if (userToDel.uid == users.caller.uid){
+				this.wss.emmitMessageToSingleSocket ('message',msgObj,users.callee.socketid);
+			}
+			else{
+				this.wss.emmitMessageToSingleSocket ('message',msgObj,users.caller.socketid);	
+			}
+			
+		}
 
 	}
 
@@ -177,9 +223,11 @@ class WebRtcSignalingServer{
 		this.sdpOffers[data.calleeId] = sdpOffer;
 		//1. It creates a new MediaPipeline Kurento Client
 		pl = this.evKurentoPLFactory.createPipeline(data.plType,this.evKurentoClt,this.wss);
+		pl.setCaller(caller);
+		pl.setCallee(callee);
 		pl.setIceCandidates(this.icecandidates);
 		pl.setSdpOffers(this.sdpOffers);
-		pl.startPipeline(caller,callee,(error,pl)=>{
+		pl.startPipeline((error,pl)=>{
 			if(error){
 				console.log(error);
 				return false;
@@ -255,7 +303,10 @@ class WebRtcSignalingServer{
 		this.wss.emmitMessageToSingleSocket ('message',msgObj,caller.socketid);
 	}
 
-	hangOut(){
+	hangUp(data){
+		let userToDel = this.cltRegistry.getClientByUid(data.uid);
+		/* If the related user is in an ongoing call it stops de communication */
+		this.releasePl(userToDel);
 	}
 
 

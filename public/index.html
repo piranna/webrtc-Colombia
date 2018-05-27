@@ -12,7 +12,8 @@
         <!-- Place favicon.ico in the root directory -->
 
         <!-- Modules loaded by bower, this are KURENTO CLIENT libraries -->
-        <script src="bower_components/adapter.js/adapter.js"></script>
+        <!-- <script src="bower_components/adapter.js/adapter.js"></script> -->
+        <script src="bower_components/webrtc-adapter/release/adapter.js"></script>
         <script src="bower_components/kurento-client/js/kurento-client.js"></script>
         <script src="bower_components/kurento-utils/js/kurento-utils.js"></script>
         <!-- END KURENTO CLIENT libraries -->
@@ -41,6 +42,12 @@
             <button data-type="call" class="controls__call">Call</button>
             <button data-type="stop" class="controls__stop">Stop</button>
         </section>
+        <div class="responsecall" style="display:none;">
+            <button>Accept</button>
+            <label for="recording">With recording?</label>
+            <input type="checkbox" id="recording" value="1" name="recording"/>
+            <button>Decline</button>
+        </div>
         <section class="displays">
             <div class="display" id="own">
                 <video id="vOwn" autoplay></video>

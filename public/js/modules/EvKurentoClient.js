@@ -98,7 +98,7 @@ const evKurentoClient = ((kurentoUtils)=>{
 
 		console.log("Releasing webrtc components");
 		_webRtcPeer.dispose();
-		_webRtcPeer,_sdpOffer = null;
+		_webRtcPeer,_sdpOffer = {};
 		_clientCallStatus.setStatus("READY");
 		callback({error:false,msg:`Webrtc components released`});
 
@@ -235,6 +235,7 @@ const evKurentoClient = ((kurentoUtils)=>{
 							calleeId: _cltIdentity.uid,
 							callerId: caller.uid,
 							sdpOffer: sdpOffer,
+							//plType: '1ON1_VIDEO'//This defines the type of kurento pipeline must generate in server side
 							plType: '1ON1_VIDEO_RECORDING'//This defines the type of kurento pipeline must generate in server side
 						}
 					}

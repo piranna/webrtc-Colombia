@@ -42,7 +42,8 @@ const evClients = new EvClients();
 /**
 * It connects to websocket and webrtc signaling server.
 */
-const mainSocket = io('https://192.168.1.6:8443');
+//const mainSocket = io('https://192.168.1.6:8443');
+const mainSocket = io('https://192.168.1.27:8443');
 /**
 *	It defines the identity object
 */
@@ -143,6 +144,12 @@ wssMsgHandler.subscribeToEvents('icecandidate',(data)=>{
 			console.log("Remote ICE Candidate added successfully");	
 		}
 	});
+
+})
+
+wssMsgHandler.subscribeToEvents('hangup',(data)=>{
+
+	evKurentoClient.stopCall((response)=>{ console.log(response);});
 
 })
 
@@ -258,6 +265,13 @@ $(document).ready(()=>{
 
 	btnStop.addEventListener("click",(e)=>{
 		evKurentoClient.stopCall((response)=>{ console.log(response);});
+		let msgObj = {
+			topic: 'hangup',
+			info: {
+				uid: cltIdentity.uid
+			}
+		}
+		mainSocket.emit("message",msgObj)
 	});
 	
 });

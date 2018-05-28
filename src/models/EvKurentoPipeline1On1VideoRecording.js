@@ -211,72 +211,15 @@ class EvKurentoPipeline1On1VideoRecording{
 									})
 								})
 							});
-
 						})
 					});
-
-
-
-					/*
-					pl.create("RecorderEndpoint", `${RECORDING_PATH}caller${RECORDING_EXT}`,(error, callerRecorder)=>{
-						if (error){
-							console.log(error);
-							return callback(error);
-						}
-
-						pl.create("RecorderEndpoint",  `${RECORDING_PATH}callee${RECORDING_EXT}`,
-						(error, calleeRecorder)=>{
-							if (error){
-								console.log(error);
-								return callback(error);
-							}
-
-							//Connects the endpoints
-							callerWebRtcEndPoint.connect(calleeWebRtcEndPoint,(error)=>{
-								if (error) {
-									pl.release();
-									return callback(error);
-								}
-
-								callerWebRtcEndPoint.connect(callerRecorder, "AUDIO", (error)=>{
-									if (error) {
-										pl.release();
-										return callback(error);
-									}
-
-									calleeWebRtcEndPoint.connect(callerWebRtcEndPoint,(error)=>{
-										if (error) {
-											pl.release();
-											return callback(error);
-										}
-
-										calleeWebRtcEndPoint.connect(calleeRecorder, "AUDIO", (error)=>{
-											if (error) {
-												pl.release();
-												return callback(error);
-											}
-
-											callerRecorder.record();
-											calleeRecorder.record();
-
-											this._pipeline = pl;
-											this._WebRtcEndPoints[callee.uid] = calleeWebRtcEndPoint;
-											this._WebRtcEndPoints[caller.uid] = callerWebRtcEndPoint;
-
-											callback(null,this);
-										});
-									});
-								});
-							});
-						})
-					})
 				});
 			});
 		});
 	}
 
 	//=====================================================
-	setSdpOffers = (sdpOffers) => {
+	setSdpOffers(sdpOffers){
 		this._sdpOffers = sdpOffers;
 	}
 
@@ -296,7 +239,7 @@ class EvKurentoPipeline1On1VideoRecording{
 		return true;
 	}
 
-	generateSdpAnswer = (uid,callback) => {
+	generateSdpAnswer(uid,callback){
 		this._WebRtcEndPoints[uid].processOffer(this._sdpOffers[uid],(error,sdpAnswer)=>{
 			console.log(`Generating sdpAnswer for ... ${uid}` );
 

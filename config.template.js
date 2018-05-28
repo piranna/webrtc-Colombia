@@ -2,8 +2,7 @@ const config = {
 
 	certs:{
 		cert: '/path/to/certfile.crt',
-		key: '/ path/to/keyfile.key',
-		fullchain: '/path/to/fullchain.pem'
+		key: '/ path/to/keyfile.key'
 	},
 	httpsPort: 443,
 	httpPort: 8000,

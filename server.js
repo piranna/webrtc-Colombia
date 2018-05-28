@@ -4,7 +4,7 @@
 let minimist = require('minimist');
 
 /* Own modules */
-const {httpPort, httpsPort, config: {certs: {cert, key}}} = require('./config.js');
+const {httpPort, httpsPort, certs: {cert, key}} = require('./config.js');
 let WebSecureServer = require('./src/models/WebSecureServer');
 let WebServer = require('./src/models/WebServer');
 let WebSocketsServer = require('./src/models/WebSocketsServer');
@@ -32,20 +32,15 @@ let mediaPipeLine = null;
 */
 switch(process.argv[2]){
   case 'https':
-    port = config.httpsPort;
+    port = httpsPort;
     const options = {key, cert}
     httpserver = new WebSecureServer(pathToPublic,port,options);
     break;
 
-  case 'http':
-    port = config.httpPort;
+  default:
+    port = httpPort;
     httpserver = new WebServer(pathToPublic,port);
     break;
-
-  default:{
-    console.error("No se ha definido un metodo para arrancar el servidor web","Error");
-    return "";
-  }
 }
 
 /** Starting websockets server and WebRTC signaling module */
